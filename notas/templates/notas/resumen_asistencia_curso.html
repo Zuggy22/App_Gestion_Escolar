@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block titulo %}Resumen Asistencia {{ curso }}{% endblock %}
+
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+            Asistencia
+        </p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            Resumen Curso {{ curso }}
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">Estado de aprobación por alumno y asignatura</p>
+    </div>
+    <a href="{% url 'notas:asistencia_curso' curso %}" class="btn-primary">
+        ➕ Registrar asistencia
+    </a>
+</div>
+
+{% if datos %}
+<div style="display:flex;flex-direction:column;gap:1.5rem;">
+    {% for dato in datos %}
+    <div class="glass-card rounded-2xl overflow-hidden">
+
+        <!-- Header alumno -->
+        <div style="background:linear-gradient(135deg,#0f2040,#162d57);padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(244,200,66,0.1);">
+            <div class="flex items-center gap-3">
+                <div style="width:38px;height:38px;background:rgba(244,200,66,0.1);border:1px solid rgba(244,200,66,0.3);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#f4c842;font-size:0.85rem;">
+                    {{ dato.alumno.nombre|first|upper }}{{ dato.alumno.apellido|first|upper }}
+                </div>
+                <span style="color:#f1f5f9;font-weight:700;font-size:1rem;">
+                    {{ dato.alumno.nombre }} {{ dato.alumno.apellido }}
+                </span>
+            </div>
+            <div class="flex gap-2">
+                <span class="badge-success">✅ {{ dato.aprobadas }} aprobadas</span>
+                <span class="badge-danger">❌ {{ dato.reprobadas }} reprobadas</span>
+            </div>
+        </div>
+
+        <!-- Tabla asignaturas -->
+        <table class="w-full text-sm elegant-table">
+            <thead>
+                <tr>
+                    <th style="padding:0.75rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Asignatura</th>
+                    <th style="padding:0.75rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Asistencia</th>
+                    <th style="padding:0.75rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Nota</th>
+                    <th style="padding:0.75rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Estado</th>
+                    <th style="padding:0.75rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Detalle</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in dato.materias %}
+                <tr>
+                    <td style="padding:0.75rem 1.25rem;color:#f1f5f9;font-weight:600;">{{ m.asignatura }}</td>
+                    <td style="padding:0.75rem 1.25rem;text-align:center;">
+                        {% if m.porcentaje %}
+                        <span style="font-weight:700;
+                                     color:{% if m.porcentaje >= 80 %}#86efac{% elif m.porcentaje >= 70 %}#fde68a{% else %}#fca5a5{% endif %};">
+                            {{ m.porcentaje }}%
+                        </span>
+                        {% else %}<span style="color:#374151;">—</span>{% endif %}
+                    </td>
+                    <td style="padding:0.75rem 1.25rem;text-align:center;">
+                        {% if m.promedio %}
+                        <span style="font-weight:700;
+                                     color:{% if m.promedio >= 5.5 %}#86efac{% elif m.promedio >= 4.5 %}#fde68a{% else %}#fca5a5{% endif %};">
+                            {{ m.promedio }}
+                        </span>
+                        {% else %}<span style="color:#374151;">—</span>{% endif %}
+                    </td>
+                    <td style="padding:0.75rem 1.25rem;text-align:center;">
+                        {% if m.aprobacion.estado == 'Aprobado' %}<span class="badge-success">✅ Aprobado</span>
+                        {% elif m.aprobacion.estado == 'Reprobado' %}<span class="badge-danger">❌ Reprobado</span>
+                        {% else %}<span class="badge-warning">⏳ Sin datos</span>{% endif %}
+                    </td>
+                    <td style="padding:0.75rem 1.25rem;color:#374151;font-size:0.78rem;font-style:italic;">
+                        {{ m.aprobacion.detalle }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+    <p style="color:#475569;">No hay datos registrados para este curso.</p>
+</div>
+{% endif %}
+
+{% endblock %}

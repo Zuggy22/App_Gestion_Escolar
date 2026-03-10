@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block titulo %}Registrar Asistencia{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Asistencia</p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">Registrar Asistencia</h1>
+    <p class="text-slate-500 text-sm mt-1">
+        {{ alumno.nombre }} {{ alumno.apellido }} · Curso {{ alumno.curso }}
+    </p>
+</div>
+
+<div class="glass-card rounded-2xl p-8 max-w-xl">
+    <form method="post" style="display:flex;flex-direction:column;gap:1.3rem;">
+        {% csrf_token %}
+        {% for campo in formulario %}
+        <div>
+            <label style="display:block;color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">
+                {{ campo.label }}
+            </label>
+            {{ campo }}
+            {% if campo.errors %}
+            {% for error in campo.errors %}
+            <p style="color:#f87171;font-size:0.78rem;margin-top:0.3rem;">⚠️ {{ error }}</p>
+            {% endfor %}
+            {% endif %}
+        </div>
+        {% endfor %}
+
+        <div style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);border-radius:10px;padding:1rem;font-size:0.82rem;color:#5eead4;">
+            📌 Solo se puede registrar asistencia de <strong>Lunes a Viernes</strong>.
+        </div>
+
+        <div class="flex items-center gap-4 pt-2">
+            <button type="submit" class="btn-primary">✅ Guardar Asistencia</button>
+            <a href="{% url 'notas:asistencia_alumno' alumno.pk %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">← Volver</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

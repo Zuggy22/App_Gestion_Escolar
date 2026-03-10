@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ accion }} Planificación{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Docentes</p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        {% if accion == 'Crear' %}➕ Nueva Planificación{% else %}✏️ Editar Planificación{% endif %}
+    </h1>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:800px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Selector de profesor -->
+        <div style="margin-bottom:1.5rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Profesor *
+            </label>
+            <select name="profesor_id" class="input-elegant w-full" required>
+                <option value="">— Seleccionar profesor —</option>
+                {% for prof in profesores %}
+                <option value="{{ prof.pk }}"
+                    {% if prof.pk|stringformat:"s" == prof_id %}selected{% endif %}>
+                    {{ prof.nombre }} — {{ prof.especialidad }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Tipo *</label>
+                {{ form.tipo }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Estado</label>
+                {{ form.estado }}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Curso *</label>
+                {{ form.curso }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Asignatura *</label>
+                {{ form.asignatura }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Fecha *</label>
+                {{ form.fecha }}
+            </div>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Unidad / Tema *</label>
+            {{ form.unidad_tema }}
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">🎯 Objetivos de Aprendizaje *</label>
+                {{ form.objetivos }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">⚙️ Actividades a Realizar *</label>
+                {{ form.actividades }}
+            </div>
+        </div>
+
+        <div style="margin-bottom:2rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">📦 Recursos y Materiales</label>
+            {{ form.recursos }}
+        </div>
+
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'planificaciones:lista' %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);color:#64748b;text-decoration:none;font-size:0.85rem;">
+                Cancelar
+            </a>
+            <button type="submit" class="btn-primary">
+                {% if accion == 'Crear' %}✅ Guardar Planificación{% else %}✅ Actualizar{% endif %}
+            </button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

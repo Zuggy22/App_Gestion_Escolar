@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ accion }} — PIE{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        PIE · Programa de Integración Escolar
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        {% if accion == 'Ingresar' %}🧩 Ingresar Alumno al PIE
+        {% else %}✏️ Editar Registro PIE{% endif %}
+    </h1>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:750px;">
+    <form method="post">
+        {% csrf_token %}
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div style="grid-column:span 2;">
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Alumno *</label>
+                {{ form.alumno }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Tipo de Necesidad *</label>
+                {{ form.necesidad }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Nivel de Apoyo *</label>
+                {{ form.nivel_apoyo }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Fecha de Ingreso *</label>
+                {{ form.fecha_ingreso }}
+            </div>
+            <div style="display:flex;align-items:center;gap:0.6rem;padding-top:1.5rem;">
+                {{ form.activo }}
+                <label style="color:#94a3b8;font-size:0.85rem;">Registro activo</label>
+            </div>
+            <div style="grid-column:span 2;">
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Descripción del Diagnóstico *</label>
+                {{ form.diagnostico }}
+            </div>
+            <div style="grid-column:span 2;">
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Observaciones adicionales</label>
+                {{ form.observaciones }}
+            </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'pie:lista' %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#64748b;text-decoration:none;font-size:0.85rem;">
+                Cancelar
+            </a>
+            <button type="submit" class="btn-primary">✅ Guardar</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

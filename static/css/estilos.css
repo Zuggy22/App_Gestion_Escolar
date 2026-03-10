@@ -1,0 +1,455 @@
+/* ============================================================
+   estilos.css — App Gestión Escolar
+   Liceo Municipal · Colores institucionales: azul marino y blanco
+   PASO 2 del PDF Parte II: Archivo CSS centralizado en /static/css/
+   ============================================================ */
+
+/* --- Reset básico --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f4f8;
+    color: #1a1a2e;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ============================================================
+   NAVBAR — Barra de navegación superior
+   ============================================================ */
+.navbar {
+    background-color: #0d2b5e;   /* Azul marino institucional */
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.navbar-brand {
+    color: #ffffff;
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.navbar-brand span {
+    color: #f0c040;   /* Dorado para contraste */
+}
+
+.navbar-links {
+    display: flex;
+    list-style: none;
+    gap: 0.5rem;
+}
+
+.navbar-links a {
+    color: #ccd9f0;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.navbar-links a:hover {
+    background-color: #1a4a8a;
+    color: #ffffff;
+}
+
+.navbar-links a.activo {
+    background-color: #f0c040;
+    color: #0d2b5e;
+    font-weight: 600;
+}
+
+/* Botón Cerrar Sesión en el navbar */
+.btn-cerrar-sesion {
+    background: transparent;
+    border: 1px solid #f08080;
+    color: #f08080;
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s;
+    font-family: inherit;
+}
+
+.btn-cerrar-sesion:hover {
+    background-color: #f08080;
+    color: #fff;
+}
+
+/* ============================================================
+   CONTENIDO PRINCIPAL
+   ============================================================ */
+main {
+    flex: 1;
+    padding: 2.5rem 2rem;
+    max-width: 1100px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Encabezado de sección */
+.page-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid #0d2b5e;
+}
+
+.page-header h1 {
+    font-size: 2rem;
+    color: #0d2b5e;
+    font-weight: 700;
+}
+
+.page-header p {
+    color: #5a6a80;
+    margin-top: 0.3rem;
+    font-size: 0.95rem;
+}
+
+/* ============================================================
+   TARJETAS (Cards)
+   ============================================================ */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(13, 43, 94, 0.1);
+    border-left: 4px solid #0d2b5e;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(13, 43, 94, 0.18);
+}
+
+.card-nombre {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #0d2b5e;
+    margin-bottom: 0.5rem;
+}
+
+.card-detalle {
+    font-size: 0.88rem;
+    color: #5a6a80;
+    margin-bottom: 0.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.badge {
+    display: inline-block;
+    background-color: #e8f0fe;
+    color: #0d2b5e;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.badge-verde {
+    background-color: #e6f9f0;
+    color: #1a7a4a;
+}
+
+.badge-rojo {
+    background-color: #fdecea;
+    color: #b71c1c;
+}
+
+/* ============================================================
+   MENSAJE DE LISTA VACÍA
+   ============================================================ */
+.alerta-vacia {
+    background-color: #fff8e1;
+    border: 1px solid #f0c040;
+    border-radius: 8px;
+    padding: 1.5rem;
+    color: #7a5800;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+footer {
+    background-color: #0d2b5e;
+    color: #9ab0d0;
+    text-align: center;
+    padding: 1.2rem;
+    font-size: 0.85rem;
+    margin-top: auto;
+}
+
+footer strong {
+    color: #f0c040;
+}
+
+/* ============================================================
+   FORMULARIOS — Parte III
+   Estilos para los formularios de inscripción
+   ============================================================ */
+
+.form-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 560px;
+    box-shadow: 0 4px 20px rgba(13, 43, 94, 0.1);
+    border-top: 4px solid #0d2b5e;
+}
+
+.form-grupo {
+    margin-bottom: 1.3rem;
+}
+
+.form-grupo label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #0d2b5e;
+    margin-bottom: 0.4rem;
+}
+
+/* Clase que asignamos en widgets de los forms.py */
+.form-input {
+    width: 100%;
+    padding: 0.65rem 1rem;
+    border: 2px solid #dce6f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #1a1a2e;
+    transition: border-color 0.2s;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.form-input:focus {
+    border-color: #0d2b5e;
+}
+
+.form-errores {
+    background: #fdecea;
+    border: 1px solid #f5c6cb;
+    color: #b71c1c;
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+}
+
+.btn-enviar {
+    background-color: #0d2b5e;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 0.5rem;
+}
+
+.btn-enviar:hover {
+    background-color: #1a4a8a;
+}
+
+.btn-secundario {
+    display: inline-block;
+    margin-left: 1rem;
+    color: #5a6a80;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* Página de resumen/confirmación */
+.resumen-card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem 2.5rem;
+    max-width: 500px;
+    box-shadow: 0 4px 20px rgba(13, 43, 94, 0.1);
+    border-left: 6px solid #1a7a4a;
+}
+
+.resumen-card h2 {
+    color: #1a7a4a;
+    margin-bottom: 1.2rem;
+}
+
+.resumen-fila {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.resumen-fila strong {
+    color: #0d2b5e;
+    min-width: 120px;
+}
+
+.btn-volver {
+    display: inline-block;
+    margin-top: 1.5rem;
+    background: #0d2b5e;
+    color: #fff;
+    padding: 0.6rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+/* Botón "Añadir nuevo" en páginas de lista */
+.btn-nuevo {
+    display: inline-block;
+    background-color: #1a7a4a;
+    color: #ffffff;
+    padding: 0.5rem 1.2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.btn-nuevo:hover {
+    background-color: #155d38;
+}
+
+/* ============================================================
+   FORMULARIOS — Parte III
+   ============================================================ */
+.form-container {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    max-width: 560px;
+    box-shadow: 0 2px 12px rgba(13, 43, 94, 0.1);
+}
+
+.campo-form {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    border: 2px solid #dce4f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: border-color 0.2s;
+    outline: none;
+}
+
+.campo-form:focus {
+    border-color: #0d2b5e;
+}
+
+.form-grupo-django {
+    margin-bottom: 1.2rem;
+}
+
+.form-grupo-django label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #0d2b5e;
+    margin-bottom: 0.4rem;
+}
+
+.form-grupo-django .errorlist {
+    list-style: none;
+    color: #b71c1c;
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+    padding: 0;
+}
+
+.btn-primary {
+    background-color: #0d2b5e;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover { background-color: #1a4a8a; }
+
+.btn-secundario {
+    display: inline-block;
+    margin-left: 1rem;
+    color: #0d2b5e;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+/* Tarjeta de resumen / confirmación */
+.resumen-card {
+    background: white;
+    border-radius: 12px;
+    padding: 2.5rem;
+    max-width: 560px;
+    box-shadow: 0 2px 12px rgba(13, 43, 94, 0.1);
+    border-top: 5px solid #22c55e;
+}
+
+.resumen-card h2 { color: #1a7a4a; margin-bottom: 1.5rem; }
+
+.resumen-fila {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #f0f4f8;
+}
+
+.resumen-fila .etiqueta {
+    font-weight: 600;
+    color: #0d2b5e;
+    min-width: 140px;
+    font-size: 0.88rem;
+}
+
+.resumen-fila .valor {
+    color: #1a1a2e;
+    font-size: 0.95rem;
+}
+
+.acciones-resumen {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}

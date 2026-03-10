@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ accion }} PACI{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        PIE · {{ reg.alumno.nombre }} {{ reg.alumno.apellido }}
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        📋 {{ accion }} Plan PACI
+    </h1>
+    <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+        Curso: {{ reg.alumno.curso }} · {{ reg.get_necesidad_display }}
+    </p>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:800px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Identificación del plan -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:1.25rem;margin-bottom:1.5rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Año *
+                </label>
+                {{ form.anno }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Trimestre *
+                </label>
+                {{ form.trimestre }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Asignatura *
+                </label>
+                {{ form.asignatura }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Responsable *
+                </label>
+                {{ form.responsable }}
+            </div>
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(244,200,66,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            🎯 Objetivos del Plan
+        </p>
+
+        <!-- Objetivo general -->
+        <div style="margin-bottom:1.25rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                          letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Objetivo General *
+            </label>
+            {{ form.objetivo_general }}
+        </div>
+
+        <!-- Objetivos específicos -->
+        <div style="margin-bottom:1.25rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                          letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Objetivos Específicos *
+                <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                    Puedes listarlos numerados o con guiones
+                </span>
+            </label>
+            {{ form.objetivos_especificos }}
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(244,200,66,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            ⚙️ Metodología
+        </p>
+
+        <!-- Estrategias y recursos -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Estrategias Metodológicas *
+                </label>
+                {{ form.estrategias }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Recursos y Materiales
+                </label>
+                {{ form.recursos }}
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'pie:detalle' reg.pk %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;
+                      background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);
+                      color:#64748b;text-decoration:none;font-size:0.85rem;">
+                ← Cancelar
+            </a>
+            <button type="submit" class="btn-primary">
+                ✅ {{ accion }} PACI
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

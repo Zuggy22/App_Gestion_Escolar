@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block titulo %}Profesor Registrado{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#22c55e;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        ✅ Registro Exitoso
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Profesor Registrado
+    </h1>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:800px;">
+
+    <div class="glass-card rounded-2xl p-8" style="border-top:3px solid #22c55e;">
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#064e3b,#065f46);border:2px solid rgba(52,211,153,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#6ee7b7;font-size:1.6rem;margin-bottom:1.5rem;">
+            {{ nombre|first|upper }}
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;color:#86efac;font-size:1.3rem;margin-bottom:1.5rem;">
+            🎉 ¡Profesor registrado!
+        </h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem;">
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Nombre</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ nombre }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Especialidad</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ especialidad }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Experiencia</span>
+                <span class="badge-success">{{ años_exp }} años</span>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <a href="{% url 'profesores:crear' %}" class="btn-primary" style="text-align:center;">
+                ➕ Registrar otro profesor
+            </a>
+            <a href="{% url 'profesores:lista' %}"
+               style="text-align:center;color:#475569;font-size:0.85rem;text-decoration:none;padding:0.5rem;">
+                ← Ver lista de profesores
+            </a>
+        </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #f4c842;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">📚</div>
+            <div style="color:#fde68a;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">Asignar curso</div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Asigna este profesor como jefe de un curso desde la sección de cursos.
+            </p>
+            <a href="{% url 'cursos:lista' %}" class="btn-warning" style="font-size:0.78rem;">
+                Ver cursos →
+            </a>
+        </div>
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #6366f1;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">👩‍🎓</div>
+            <div style="color:#a5b4fc;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">Ver alumnos</div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Consulta los alumnos registrados en el sistema.
+            </p>
+            <a href="{% url 'alumnos:lista' %}" class="btn-indigo" style="font-size:0.78rem;">
+                Ver alumnos →
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

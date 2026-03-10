@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block titulo %}Eliminar Apoderado{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <h1 style="font-family:'Playfair Display',serif;color:#ef4444;font-size:2rem;">🗑️ Confirmar Eliminación</h1>
+</div>
+
+<div class="glass-card rounded-2xl p-8 max-w-lg" style="border-left:3px solid #ef4444;">
+    <div style="width:56px;height:56px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1.5rem;">⚠️</div>
+    <h2 style="color:#fca5a5;font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">¿Eliminar este apoderado?</h2>
+    <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:1rem;margin-bottom:1.5rem;">
+        <p style="color:#f1f5f9;font-weight:700;">{{ objeto.nombre }}</p>
+        <p style="color:#64748b;font-size:0.82rem;">{{ objeto.get_relacion_display }} de {{ objeto.alumno }}</p>
+    </div>
+    <p style="color:#ef4444;font-size:0.85rem;margin-bottom:2rem;">
+        ⚠️ Se eliminarán también todos los mensajes asociados.
+    </p>
+    <form method="post" class="flex gap-4 items-center">
+        {% csrf_token %}
+        <button type="submit"
+                style="background:linear-gradient(135deg,rgba(239,68,68,0.3),rgba(220,38,38,0.2));border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:0.75rem 1.75rem;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;">
+            🗑️ Sí, eliminar
+        </button>
+        <a href="{% url 'apoderados:lista' %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">← Cancelar</a>
+    </form>
+</div>
+{% endblock %}

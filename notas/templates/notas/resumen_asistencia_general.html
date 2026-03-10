@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block titulo %}Asistencia{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Asistencia
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        📋 Asistencia por Cursos
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">Selecciona un curso para ver o registrar asistencia</p>
+</div>
+
+{% if cursos %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem;">
+    {% for curso in cursos %}
+    <div class="glass-card rounded-2xl p-6" style="border-top:3px solid #14b8a6;">
+        <div style="font-size:2rem;margin-bottom:0.75rem;">📋</div>
+        <div style="color:#f1f5f9;font-size:1.15rem;font-weight:700;margin-bottom:0.3rem;">
+            Curso {{ curso }}
+        </div>
+        <div style="color:#475569;font-size:0.8rem;margin-bottom:1.25rem;">
+            Registro de asistencia diaria
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;">
+            <a href="{% url 'notas:resumen_asistencia_curso' curso_nombre=curso %}"
+               class="btn-teal" style="text-align:center;">
+                📊 Ver resumen
+            </a>
+            <a href="{% url 'notas:asistencia_curso' curso_nombre=curso %}"
+               class="btn-primary" style="text-align:center;font-size:0.78rem;">
+                ➕ Registrar asistencia
+            </a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📋</div>
+    <p style="color:#475569;">No hay cursos registrados con alumnos.</p>
+    <a href="{% url 'alumnos:crear' %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Matricular alumno
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

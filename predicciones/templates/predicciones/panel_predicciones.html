@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block titulo %}Predicciones ML{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Inteligencia Artificial
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Predicción de Riesgo Académico
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">Algoritmo Random Forest · scikit-learn</p>
+</div>
+
+<!-- Tarjetas resumen -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #6366f1;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#f1f5f9;line-height:1;">{{ total }}</div>
+        <div style="color:#64748b;font-size:0.82rem;margin-top:0.3rem;">Analizados</div>
+    </div>
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #22c55e;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#86efac;line-height:1;">{{ sin_riesgo }}</div>
+        <div style="color:#64748b;font-size:0.82rem;margin-top:0.3rem;">Sin Riesgo 🟢</div>
+    </div>
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #ef4444;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#fca5a5;line-height:1;">{{ en_riesgo }}</div>
+        <div style="color:#64748b;font-size:0.82rem;margin-top:0.3rem;">En Riesgo 🔴</div>
+    </div>
+</div>
+
+<!-- Tabla predicciones -->
+{% if resultados %}
+<div class="glass-card rounded-2xl overflow-hidden mb-6">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Alumno</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Promedio</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Riesgo</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Probabilidad</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Recomendación</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in resultados %}
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div style="color:#f1f5f9;font-weight:600;">{{ r.alumno.nombre }} {{ r.alumno.apellido }}</div>
+                    <div style="color:#475569;font-size:0.75rem;">{{ r.alumno.curso }}</div>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <span style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:#f1f5f9;">
+                        {{ r.alumno.promedio }}
+                    </span>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    {% if r.prediccion.nivel == 'Alto' %}<span class="badge-danger">🔴 Alto</span>
+                    {% elif r.prediccion.nivel == 'Medio' %}<span class="badge-warning">🟡 Medio</span>
+                    {% else %}<span class="badge-success">🟢 Bajo</span>{% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div style="width:100px;margin:0 auto;">
+                        <div style="background:rgba(255,255,255,0.05);border-radius:99px;height:6px;margin-bottom:0.3rem;overflow:hidden;">
+                            <div style="height:100%;border-radius:99px;width:{{ r.prediccion.probabilidad }}%;
+                                        background:{% if r.prediccion.nivel == 'Alto' %}#ef4444{% elif r.prediccion.nivel == 'Medio' %}#eab308{% else %}#22c55e{% endif %};">
+                            </div>
+                        </div>
+                        <span style="font-size:0.75rem;color:#64748b;">{{ r.prediccion.probabilidad }}%</span>
+                    </div>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#64748b;font-size:0.82rem;font-style:italic;">
+                    {{ r.prediccion.mensaje }}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">🤖</div>
+    <p style="color:#475569;">No hay alumnos para analizar.</p>
+</div>
+{% endif %}
+
+<!-- Nota técnica -->
+<div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:14px;padding:1.25rem;font-size:0.82rem;color:#a5b4fc;">
+    🔬 <strong>Modelo:</strong> Random Forest con 100 estimadores. Evalúa promedio y edad de cada alumno.
+    El modelo se re-entrena automáticamente con los datos actuales en cada consulta.
+</div>
+
+{% endblock %}

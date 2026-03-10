@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ plan.unidad_tema }}{% endblock %}
+{% block contenido %}
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+            {{ plan.get_tipo_display }} · {{ plan.curso }}
+        </p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            {{ plan.unidad_tema }}
+        </h1>
+        <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+            👨‍🏫 {{ plan.profesor.nombre }} · {{ plan.asignatura }} · 📅 {{ plan.fecha|date:"d/m/Y" }}
+        </p>
+    </div>
+    <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+        <a href="{% url 'planificaciones:detalle' plan.pk %}?imprimir=1"
+           onclick="window.print();return false;"
+           class="btn-teal">🖨️ Imprimir</a>
+        <a href="{% url 'planificaciones:editar' plan.pk %}" class="btn-warning">✏️ Editar</a>
+        <a href="{% url 'planificaciones:lista' %}"
+           style="padding:0.6rem 1.2rem;border-radius:8px;background:rgba(255,255,255,0.04);
+                  border:1px solid rgba(255,255,255,0.08);color:#64748b;text-decoration:none;font-size:0.85rem;">
+            ← Volver
+        </a>
+    </div>
+</div>
+
+<!-- Badges de estado -->
+<div style="display:flex;gap:0.6rem;margin-bottom:2rem;flex-wrap:wrap;">
+    <span style="background:{{ plan.color_tipo.bg }};color:{{ plan.color_tipo.text }};
+                 border:1px solid {{ plan.color_tipo.border }};
+                 font-size:0.78rem;font-weight:700;padding:0.3rem 0.85rem;border-radius:20px;">
+        {{ plan.get_tipo_display }}
+    </span>
+    <span style="background:{{ plan.color_estado.bg }};color:{{ plan.color_estado.text }};
+                 border:1px solid {{ plan.color_estado.border }};
+                 font-size:0.78rem;font-weight:700;padding:0.3rem 0.85rem;border-radius:20px;">
+        {{ plan.get_estado_display }}
+    </span>
+</div>
+
+<!-- Contenido de la planificación -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+
+    <div class="glass-card rounded-2xl p-6">
+        <h3 style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                   letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+            🎯 Objetivos de Aprendizaje
+        </h3>
+        <p style="color:#cbd5e1;font-size:0.88rem;line-height:1.7;white-space:pre-line;">{{ plan.objetivos }}</p>
+    </div>
+
+    <div class="glass-card rounded-2xl p-6">
+        <h3 style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                   letter-spacing:1.5px;margin-bottom:1rem;display:flex;align-items:center;gap:0.5rem;">
+            ⚙️ Actividades a Realizar
+        </h3>
+        <p style="color:#cbd5e1;font-size:0.88rem;line-height:1.7;white-space:pre-line;">{{ plan.actividades }}</p>
+    </div>
+
+</div>
+
+{% if plan.recursos %}
+<div class="glass-card rounded-2xl p-6 mb-6">
+    <h3 style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+               letter-spacing:1.5px;margin-bottom:1rem;">
+        📦 Recursos y Materiales
+    </h3>
+    <p style="color:#cbd5e1;font-size:0.88rem;line-height:1.7;white-space:pre-line;">{{ plan.recursos }}</p>
+</div>
+{% endif %}
+
+<!-- Estilos para impresión -->
+<style>
+@media print {
+    nav, .btn-primary, .btn-warning, .btn-teal, a[href*="volver"],
+    a[href*="editar"], a[href*="imprimir"] { display: none !important; }
+    body { background: white !important; color: black !important; }
+    .glass-card { background: white !important; border: 1px solid #ccc !important; box-shadow: none !important; }
+    h1, h3, p { color: black !important; }
+}
+</style>
+
+{% endblock %}

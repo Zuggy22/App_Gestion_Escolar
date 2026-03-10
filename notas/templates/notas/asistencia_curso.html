@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block titulo %}Asistencia Curso {{ curso }}{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Asistencia Masiva
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Curso {{ curso }}
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">Registra la asistencia de todos los alumnos</p>
+</div>
+
+<div class="glass-card rounded-2xl p-8">
+    <form method="post" style="display:flex;flex-direction:column;gap:1.5rem;">
+        {% csrf_token %}
+
+        <!-- Asignatura y Fecha -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+            <div>
+                <label style="display:block;color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">
+                    Asignatura
+                </label>
+                <select name="asignatura" class="input-elegant">
+                    {% for valor, label in asignaturas %}
+                    <option value="{{ valor }}">{{ label }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label style="display:block;color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">
+                    Fecha (Lunes a Viernes)
+                </label>
+                <input type="date" name="fecha" value="{{ hoy }}" max="{{ hoy }}" class="input-elegant">
+            </div>
+        </div>
+
+        <!-- Lista de alumnos -->
+        <div>
+            <p style="color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">
+                Asistencia por alumno
+            </p>
+            <div style="display:flex;flex-direction:column;gap:0.5rem;">
+                {% for alumno in alumnos %}
+                <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:0.85rem 1.25rem;transition:border-color 0.2s;"
+                     onmouseover="this.style.borderColor='rgba(244,200,66,0.15)'"
+                     onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'">
+                    <div class="flex items-center gap-3">
+                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#1e3f7a,#0f2040);border:1px solid rgba(244,200,66,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#f4c842;font-size:0.78rem;flex-shrink:0;">
+                            {{ alumno.nombre|first|upper }}{{ alumno.apellido|first|upper }}
+                        </div>
+                        <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">
+                            {{ alumno.nombre }} {{ alumno.apellido }}
+                        </span>
+                    </div>
+                    <div class="flex gap-4">
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                            <input type="radio" name="estado_{{ alumno.pk }}" value="Presente" checked
+                                   style="accent-color:#22c55e;width:16px;height:16px;">
+                            <span style="color:#86efac;font-size:0.85rem;font-weight:600;">✅ Presente</span>
+                        </label>
+                        <label style="display:flex;align-items:center;gap:0.5rem;cursor:pointer;">
+                            <input type="radio" name="estado_{{ alumno.pk }}" value="Ausente"
+                                   style="accent-color:#ef4444;width:16px;height:16px;">
+                            <span style="color:#fca5a5;font-size:0.85rem;font-weight:600;">❌ Ausente</span>
+                        </label>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <button type="submit" class="btn-primary" style="padding:0.75rem 2rem;font-size:0.9rem;">
+                ✅ Guardar Asistencia del Curso
+            </button>
+            <a href="{% url 'notas:resumen_asistencia_curso' curso %}"
+               style="color:#475569;font-size:0.85rem;text-decoration:none;">
+                Ver resumen →
+            </a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

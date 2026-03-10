@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+{% block titulo %}Alumnos{% endblock %}
+
+{% block contenido %}
+
+<!-- Header -->
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;"
+           class="mb-1">Gestión</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            Lista de Alumnos
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">
+            Registro de estudiantes del Liceo Municipal
+        </p>
+    </div>
+    <a href="{% url 'alumnos:crear' %}" class="btn-primary">
+        ➕ Matricular Alumno
+    </a>
+</div>
+
+<!-- Buscador -->
+<form method="get" class="flex gap-3 mb-6">
+    <input type="text" name="q" value="{{ busqueda }}"
+           placeholder="🔍 Buscar por nombre o apellido..."
+           class="input-elegant flex-1">
+    <button type="submit" class="btn-primary">Buscar</button>
+    {% if busqueda %}
+    <a href="{% url 'alumnos:lista' %}"
+       style="background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:#94a3b8;padding:0.6rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;transition:all 0.3s;text-decoration:none;">
+        ✕ Limpiar
+    </a>
+    {% endif %}
+</form>
+
+{% if busqueda %}
+<p class="text-slate-500 text-sm mb-4">
+    Resultados para <span style="color:#f4c842;font-weight:600;">{{ busqueda }}</span>:
+    {{ alumnos.count }} encontrado(s)
+</p>
+{% endif %}
+
+<!-- Tabla -->
+{% if alumnos %}
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <th>RUT</th>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+                    Alumno
+                </th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+                    Curso
+                </th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+                    Correo
+                </th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+                    Promedio
+                </th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">
+                    Acciones
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for alumno in alumnos %}
+              <!-- En el <tbody> agregar después del contador -->
+            <td style="color:#94a3b8;font-size:0.82rem;">
+                {{ alumno.rut|default:"—" }}
+            </td>
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div class="flex items-center gap-3">
+                        <div style="width:36px;height:36px;background:linear-gradient(135deg,#1e3f7a,#162d57);border:1px solid rgba(244,200,66,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#f4c842;font-size:0.85rem;flex-shrink:0;">
+                            {{ alumno.nombre|first|upper }}{{ alumno.apellido|first|upper }}
+                        </div>
+                        <div>
+                            <div style="color:#f1f5f9;font-weight:600;">
+                                {{ alumno.nombre }} {{ alumno.apellido }}
+                            </div>
+                            <div style="color:#475569;font-size:0.75rem;">
+                                ID #{{ alumno.pk }}
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding:1rem 1.25rem;">
+                    <span class="badge-info">{{ alumno.curso }}</span>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#64748b;font-size:0.85rem;">
+                    {{ alumno.correo }}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    {% if alumno.promedio >= 5.5 %}
+                    <span class="badge-success">✓ {{ alumno.promedio }}</span>
+                    {% elif alumno.promedio > 0 %}
+                    <span class="badge-danger">✗ {{ alumno.promedio }}</span>
+                    {% else %}
+                    <span class="badge-warning">— Sin notas</span>
+                    {% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div class="flex justify-center gap-2 flex-wrap">
+                        <a href="{% url 'notas:notas_alumno' alumno.pk %}" class="btn-indigo">
+                            📊 Notas
+                        </a>
+                        <a href="{% url 'notas:asistencia_alumno' alumno.pk %}" class="btn-teal">
+                            📋 Asistencia
+                        </a>
+                        <a href="{% url 'notas:informe_alumno' alumno.pk %}"
+                           style="background:rgba(244,200,66,0.1);border:1px solid rgba(244,200,66,0.3);color:#f4c842;padding:0.5rem 1rem;border-radius:8px;font-size:0.8rem;font-weight:600;transition:all 0.3s;text-decoration:none;"
+                           onmouseover="this.style.background='rgba(244,200,66,0.2)'"onmouseout="this.style.background='rgba(244,200,66,0.1)'">
+                            📄 Informe
+                        </a>
+                        <a href="{% url 'alumnos:editar' alumno.pk %}" class="btn-warning">
+                            ✏️ Editar
+                        </a>
+                        <a href="{% url 'alumnos:eliminar' alumno.pk %}" class="btn-danger">
+                            🗑️
+                        </a>
+
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">👩‍🎓</div>
+    <p style="color:#475569;font-size:0.95rem;">No hay alumnos registrados en el sistema.</p>
+    <a href="{% url 'alumnos:crear' %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Matricular primer alumno
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

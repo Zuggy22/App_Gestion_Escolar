@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block titulo %}Enviar Mensaje{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Canal de Comunicación</p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">✉️ Enviar Mensaje</h1>
+    <p class="text-slate-500 text-sm mt-1">
+        De: <strong style="color:#94a3b8;">{{ apoderado.nombre }}</strong>
+        → Profesor Jefe de {{ apoderado.alumno.nombre }} {{ apoderado.alumno.apellido }}
+    </p>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:1.5rem;">
+    <div class="glass-card rounded-2xl p-8">
+        <form method="post" style="display:flex;flex-direction:column;gap:1.25rem;">
+            {% csrf_token %}
+            {% for campo in form %}
+            <div>
+                <label style="display:block;color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">
+                    {{ campo.label }}
+                </label>
+                {{ campo }}
+                {% if campo.errors %}
+                {% for error in campo.errors %}
+                <p style="color:#f87171;font-size:0.78rem;margin-top:0.3rem;">⚠️ {{ error }}</p>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.2);border-radius:10px;padding:1rem;font-size:0.82rem;color:#5eead4;">
+                📧 Se enviará una notificación al correo del profesor jefe automáticamente.
+            </div>
+
+            <div class="flex gap-4 items-center">
+                <button type="submit" class="btn-primary" style="padding:0.75rem 2rem;">
+                    ✅ Enviar Mensaje
+                </button>
+                <a href="{% url 'apoderados:detalle' apoderado.pk %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">← Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="glass-card rounded-2xl p-5" style="border-top:2px solid #14b8a6;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">👨‍👩‍👧</div>
+            <div style="color:#5eead4;font-size:0.78rem;font-weight:700;text-transform:uppercase;margin-bottom:0.5rem;">Alumno</div>
+            <p style="color:#f1f5f9;font-weight:600;">{{ apoderado.alumno.nombre }} {{ apoderado.alumno.apellido }}</p>
+            <p style="color:#475569;font-size:0.8rem;">Curso: {{ apoderado.alumno.curso }}</p>
+        </div>
+        <div class="glass-card rounded-2xl p-5" style="border-top:2px solid #6366f1;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">📋</div>
+            <div style="color:#a5b4fc;font-size:0.78rem;font-weight:700;text-transform:uppercase;margin-bottom:0.5rem;">Categorías</div>
+            <div style="display:flex;flex-direction:column;gap:0.3rem;font-size:0.8rem;">
+                <span style="color:#a5b4fc;">📚 Académico</span>
+                <span style="color:#fca5a5;">⚠️ Conductual</span>
+                <span style="color:#fde68a;">📋 Administrativo</span>
+                <span style="color:#5eead4;">🏥 Salud</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

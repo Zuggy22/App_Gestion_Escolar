@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block titulo %}Notas — {{ alumno.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+            Rendimiento Académico
+        </p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            {{ alumno.nombre }} {{ alumno.apellido }}
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">Curso: <strong style="color:#94a3b8;">{{ alumno.curso }}</strong></p>
+    </div>
+
+    <!-- Botones de acción -->
+    <div style="display:flex;gap:0.75rem;align-items:center;">
+        <a href="{% url 'notas:agregar_nota' alumno.pk %}" class="btn-primary">
+            ➕ Agregar Notas
+        </a>
+        <a href="{% url 'notas:informe_alumno' alumno.pk %}"
+           style="background:linear-gradient(135deg,rgba(244,200,66,0.15),rgba(244,200,66,0.08));
+                  border:1px solid rgba(244,200,66,0.3);
+                  color:#f4c842;
+                  padding:0.6rem 1.4rem;
+                  border-radius:8px;
+                  font-weight:600;
+                  font-size:0.85rem;
+                  text-decoration:none;
+                  transition:all 0.3s;"
+           onmouseover="this.style.background='rgba(244,200,66,0.25)';this.style.transform='translateY(-1px)'"
+           onmouseout="this.style.background='linear-gradient(135deg,rgba(244,200,66,0.15),rgba(244,200,66,0.08))';this.style.transform='translateY(0)'">
+            📄 Ver Informe
+        </a>
+        <a href="{% url 'notas:asistencia_alumno' alumno.pk %}" class="btn-teal">
+            📋 Asistencia
+        </a>
+    </div>
+</div>
+
+<!-- Promedio final -->
+{% if promedio_final %}
+<div class="glass-card rounded-2xl p-6 mb-6 flex items-center gap-6"
+     style="border-left:3px solid {% if promedio_final >= 5.5 %}#22c55e{% else %}#ef4444{% endif %};">
+    <div style="font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;
+                color:{% if promedio_final >= 5.5 %}#86efac{% else %}#fca5a5{% endif %};line-height:1;">
+        {{ promedio_final }}
+    </div>
+    <div>
+        <div style="color:#f1f5f9;font-size:1.1rem;font-weight:700;">Promedio Final</div>
+        <div style="color:#64748b;font-size:0.85rem;margin-top:0.3rem;">
+            {% if promedio_final >= 5.5 %}
+            <span class="badge-success">✅ Alumno Aprobado</span>
+            {% else %}
+            <span class="badge-danger">⚠️ Alumno en Riesgo</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Tabla de notas -->
+{% if notas %}
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Asignatura</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">N1</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">N2</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">N3</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">N4</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Promedio</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Estado</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for nota in notas %}
+            <tr>
+                <td style="padding:1rem 1.25rem;color:#f1f5f9;font-weight:600;">{{ nota.asignatura }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;">{{ nota.nota_1|default:"—" }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;">{{ nota.nota_2|default:"—" }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;">{{ nota.nota_3|default:"—" }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;">{{ nota.nota_4|default:"—" }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+                                 color:{% if nota.promedio_asignatura >= 5.5 %}#86efac{% elif nota.promedio_asignatura %}#fca5a5{% else %}#475569{% endif %};">
+                        {{ nota.promedio_asignatura|default:"—" }}
+                    </span>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    {% if nota.estado == 'Aprobado' %}<span class="badge-success">✓ Aprobado</span>
+                    {% elif nota.estado == 'Reprobado' %}<span class="badge-danger">✗ Reprobado</span>
+                    {% else %}<span class="badge-warning">Sin notas</span>{% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div class="flex justify-center gap-2">
+                        <a href="{% url 'notas:agregar_nota' alumno.pk %}" class="btn-warning">✏️</a>
+                        <a href="{% url 'notas:eliminar_nota' nota.pk %}" class="btn-danger">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📊</div>
+    <p style="color:#475569;">No hay notas registradas para este alumno.</p>
+    <a href="{% url 'notas:agregar_nota' alumno.pk %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Agregar primera nota
+    </a>
+</div>
+{% endif %}
+
+<div style="margin-top:1.5rem;">
+    <a href="{% url 'alumnos:lista' %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">← Volver a alumnos</a>
+</div>
+
+{% endblock %}

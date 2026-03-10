@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block titulo %}Nuevo Informe de Avance{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        PIE · {{ reg.alumno.nombre }} {{ reg.alumno.apellido }}
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        📊 Informe de Avance
+    </h1>
+    <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+        Curso: {{ reg.alumno.curso }} · {{ reg.get_necesidad_display }}
+    </p>
+</div>
+
+<!-- Aviso PDF -->
+<div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);
+            border-radius:12px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;
+            display:flex;gap:0.75rem;align-items:flex-start;max-width:800px;">
+    <span style="font-size:1rem;flex-shrink:0;">📄</span>
+    <p style="color:#94a3b8;font-size:0.8rem;line-height:1.5;">
+        Al guardar el informe se generará automáticamente un
+        <strong style="color:#86efac;">PDF descargable</strong>
+        con el resumen completo del período, listo para entregar al apoderado.
+    </p>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:800px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Período y especialista -->
+        <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:1.25rem;margin-bottom:1.5rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Año *
+                </label>
+                {{ form.anno }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Trimestre *
+                </label>
+                {{ form.trimestre }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Especialista que emite
+                </label>
+                {{ form.especialista }}
+            </div>
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(244,200,66,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            📝 Contenido del Informe
+        </p>
+
+        <!-- Logros y dificultades -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    ✅ Logros del Período *
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        Avances y objetivos cumplidos
+                    </span>
+                </label>
+                {{ form.logros }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    ⚠️ Dificultades Observadas *
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        Áreas que requieren mayor apoyo
+                    </span>
+                </label>
+                {{ form.dificultades }}
+            </div>
+        </div>
+
+        <!-- Sugerencias -->
+        <div style="margin-bottom:1.25rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                          letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                💡 Sugerencias y Próximos Pasos *
+                <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                    Recomendaciones para el siguiente período
+                </span>
+            </label>
+            {{ form.sugerencias }}
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(34,197,94,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#86efac;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            💌 Mensaje para el Apoderado
+        </p>
+
+        <!-- Mensaje apoderado -->
+        <div style="margin-bottom:2rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                          letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Texto para la Familia *
+                <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                    Redacta en lenguaje simple y cercano para el apoderado
+                </span>
+            </label>
+            {{ form.para_apoderado }}
+        </div>
+
+        <!-- Botones -->
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'pie:detalle' reg.pk %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;
+                      background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);
+                      color:#64748b;text-decoration:none;font-size:0.85rem;">
+                ← Cancelar
+            </a>
+            <button type="submit" class="btn-primary">
+                📄 Guardar y Generar PDF
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

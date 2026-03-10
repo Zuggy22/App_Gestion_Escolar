@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block titulo %}Cursos{% endblock %}
+
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Gestión</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            Cursos Activos
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">Año escolar en curso</p>
+    </div>
+    <a href="{% url 'cursos:crear' %}" class="btn-primary">➕ Crear Curso</a>
+</div>
+
+<form method="get" class="flex gap-3 mb-6">
+    <input type="text" name="q" value="{{ busqueda }}"
+           placeholder="🔍 Buscar por nombre del ramo..."
+           class="input-elegant flex-1">
+    <button type="submit" class="btn-primary">Buscar</button>
+    {% if busqueda %}
+    <a href="{% url 'cursos:lista' %}"
+       style="background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:#94a3b8;padding:0.6rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;">
+        ✕ Limpiar
+    </a>
+    {% endif %}
+</form>
+
+{% if cursos %}
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Ramo</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Nivel</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Jornada</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Profesor Jefe</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for curso in cursos %}
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div style="color:#f1f5f9;font-weight:600;">{{ curso.nombre_ramo }}</div>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#94a3b8;">{{ curso.nivel }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <span class="badge-info">{{ curso.jornada }}</span>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#94a3b8;">
+                    {% if curso.profesor_jefe %}
+                        {{ curso.profesor_jefe.nombre }}
+                    {% else %}
+                        <span style="color:#374151;font-style:italic;">Sin asignar</span>
+                    {% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div class="flex justify-center gap-2">
+                        <a href="{% url 'cursos:editar' curso.pk %}" class="btn-warning">✏️ Editar</a>
+                        <a href="{% url 'cursos:eliminar' curso.pk %}" class="btn-danger">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📚</div>
+    <p style="color:#475569;">No hay cursos registrados.</p>
+    <a href="{% url 'cursos:crear' %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Crear primer curso
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

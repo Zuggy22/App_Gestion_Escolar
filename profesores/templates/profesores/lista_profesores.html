@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block titulo %}Profesores{% endblock %}
+
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Gestión</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            Planta Docente
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">Profesores del Liceo Municipal</p>
+    </div>
+    <a href="{% url 'profesores:crear' %}" class="btn-primary">➕ Registrar Profesor</a>
+</div>
+
+<form method="get" class="flex gap-3 mb-6">
+    <input type="text" name="q" value="{{ busqueda }}"
+           placeholder="🔍 Buscar por nombre o especialidad..."
+           class="input-elegant flex-1">
+    <button type="submit" class="btn-primary">Buscar</button>
+    {% if busqueda %}
+    <a href="{% url 'profesores:lista' %}"
+       style="background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:#94a3b8;padding:0.6rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;transition:all 0.3s;text-decoration:none;">
+        ✕ Limpiar
+    </a>
+    {% endif %}
+</form>
+
+{% if busqueda %}
+<p class="text-slate-500 text-sm mb-4">
+    Resultados para <span style="color:#f4c842;font-weight:600;">{{ busqueda }}</span>:
+    {{ profesores.count }} encontrado(s)
+</p>
+{% endif %}
+
+{% if profesores %}
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Profesor</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Especialidad</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Experiencia</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Categoría</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for profesor in profesores %}
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div class="flex items-center gap-3">
+                        <div style="width:36px;height:36px;background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid rgba(52,211,153,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#6ee7b7;font-size:0.85rem;flex-shrink:0;">
+                            {{ profesor.nombre|first|upper }}
+                        </div>
+                        <div>
+                            <div style="color:#f1f5f9;font-weight:600;">{{ profesor.nombre }}</div>
+                            <div style="color:#475569;font-size:0.75rem;">ID #{{ profesor.pk }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#94a3b8;">{{ profesor.especialidad }}</td>
+                <td style="padding:1rem 1.25rem;text-align:center;color:#f1f5f9;font-weight:600;">
+                    {{ profesor.años_experiencia }} años
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    {% if profesor.años_experiencia >= 10 %}
+                    <span class="badge-success">⭐ Senior</span>
+                    {% else %}
+                    <span class="badge-info">Docente</span>
+                    {% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div class="flex justify-center gap-2">
+                        <a href="{% url 'profesores:editar' profesor.pk %}" class="btn-warning">✏️ Editar</a>
+                        <a href="{% url 'profesores:eliminar' profesor.pk %}" class="btn-danger">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">👨‍🏫</div>
+    <p style="color:#475569;">No hay profesores registrados.</p>
+    <a href="{% url 'profesores:crear' %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Registrar primer profesor
+    </a>
+</div>
+{% endif %}
+
+{% endblock %}

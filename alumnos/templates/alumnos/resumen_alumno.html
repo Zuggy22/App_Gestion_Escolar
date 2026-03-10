@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% block titulo %}Alumno Registrado{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#22c55e;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        ✅ Registro Exitoso
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Matrícula Completada
+    </h1>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:800px;">
+
+    <!-- Tarjeta principal -->
+    <div class="glass-card rounded-2xl p-8" style="border-top:3px solid #22c55e;">
+
+        <!-- Avatar -->
+        <div style="width:64px;height:64px;background:linear-gradient(135deg,#1e3f7a,#0f2040);border:2px solid rgba(244,200,66,0.3);border-radius:16px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#f4c842;font-size:1.4rem;margin-bottom:1.5rem;">
+            {{ nombre|first|upper }}{{ apellido|first|upper }}
+        </div>
+
+        <h2 style="font-family:'Playfair Display',serif;color:#86efac;font-size:1.3rem;margin-bottom:1.5rem;">
+            🎉 ¡Alumno registrado!
+        </h2>
+
+        <!-- Datos -->
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem;">
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Nombre</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ nombre }} {{ apellido }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Edad</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ edad }} años</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Correo</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ correo }}</span>
+            </div>
+            {% if curso %}
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Curso</span>
+                <span class="badge-info">{{ curso }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Acciones -->
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <a href="{% url 'alumnos:crear' %}" class="btn-primary" style="text-align:center;">
+                ➕ Matricular otro alumno
+            </a>
+            <a href="{% url 'alumnos:lista' %}"
+               style="text-align:center;color:#475569;font-size:0.85rem;text-decoration:none;padding:0.5rem;transition:color 0.2s;"
+               onmouseover="this.style.color='#94a3b8'"
+               onmouseout="this.style.color='#475569'">
+                ← Ver lista de alumnos
+            </a>
+        </div>
+    </div>
+
+    <!-- Próximos pasos -->
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #6366f1;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;">
+                <div style="width:32px;height:32px;background:rgba(99,102,241,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">
+                    📊
+                </div>
+                <span style="color:#a5b4fc;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+                    Siguiente paso
+                </span>
+            </div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Ingresa las notas del alumno para calcular su promedio automáticamente.
+            </p>
+            <a href="{% url 'notas:agregar_nota' alumno_pk %}" class="btn-indigo" style="font-size:0.78rem;">
+                📊 Agregar notas →
+            </a>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #14b8a6;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;">
+                <div style="width:32px;height:32px;background:rgba(20,184,166,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">
+                    📋
+                </div>
+                <span style="color:#5eead4;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+                    Asistencia
+                </span>
+            </div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Comienza a registrar la asistencia diaria por asignatura.
+            </p>
+            <a href="{% url 'notas:registrar_asistencia' alumno_pk %}" class="btn-teal" style="font-size:0.78rem;">
+                📋 Registrar asistencia →
+            </a>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #f4c842;">
+            <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.6rem;">
+                <div style="width:32px;height:32px;background:rgba(244,200,66,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem;">
+                    🤖
+                </div>
+                <span style="color:#fde68a;font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+                    Predicción ML
+                </span>
+            </div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Consulta el panel de predicciones para detectar riesgo académico.
+            </p>
+            <a href="{% url 'predicciones:panel' %}" class="btn-warning" style="font-size:0.78rem;">
+                🤖 Ver predicciones →
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

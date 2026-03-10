@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% block titulo %}Enviar Mensaje a Alumnos{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Comunicaciones</p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">📢 Enviar Mensaje a Alumnos</h1>
+    <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">Se enviará como mensaje interno y por correo electrónico</p>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:700px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="margin-bottom:1.5rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Profesor que envía *
+            </label>
+            <select name="profesor_id" class="input-elegant w-full" required>
+                <option value="">— Seleccionar profesor —</option>
+                {% for prof in profesores %}
+                <option value="{{ prof.pk }}" {% if prof.pk|stringformat:"s" == prof_id %}selected{% endif %}>
+                    {{ prof.nombre }} — {{ prof.especialidad }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Tipo *</label>
+                {{ form.tipo }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Curso destinatario *
+                    <span style="color:#475569;font-size:0.7rem;display:block;margin-top:0.1rem;text-transform:none;">
+                        Escribe el nombre exacto del curso o <strong style="color:#f4c842;">TODOS</strong> para todos los alumnos
+                    </span>
+                </label>
+                {{ form.curso }}
+            </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Asunto *</label>
+                {{ form.asunto }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">📅 Fecha del Evento</label>
+                {{ form.fecha_evento }}
+            </div>
+        </div>
+
+        <div style="margin-bottom:2rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.5rem;">Mensaje *</label>
+            {{ form.mensaje }}
+        </div>
+
+        <!-- Aviso -->
+        <div style="background:rgba(244,200,66,0.06);border:1px solid rgba(244,200,66,0.2);
+                    border-radius:10px;padding:0.85rem 1rem;margin-bottom:1.5rem;
+                    display:flex;gap:0.6rem;align-items:flex-start;">
+            <span style="font-size:1rem;">💡</span>
+            <p style="color:#94a3b8;font-size:0.78rem;line-height:1.5;">
+                El mensaje quedará registrado en el sistema y se enviará por correo electrónico a todos los alumnos del curso que tengan correo registrado.
+            </p>
+        </div>
+
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'planificaciones:lista' %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);color:#64748b;text-decoration:none;font-size:0.85rem;">
+                Cancelar
+            </a>
+            <button type="submit" class="btn-primary">📤 Enviar Mensaje</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block titulo %}Apoderados{% endblock %}
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Gestión</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">👨‍👩‍👧 Apoderados</h1>
+        <p class="text-slate-500 text-sm mt-1">Registro de apoderados del Liceo Municipal</p>
+    </div>
+    <div style="display:flex;gap:0.75rem;">
+        <a href="{% url 'apoderados:bandeja' %}" class="btn-teal">📬 Bandeja</a>
+        <a href="{% url 'apoderados:crear' %}" class="btn-primary">➕ Registrar Apoderado</a>
+    </div>
+</div>
+
+<form method="get" class="flex gap-3 mb-6">
+    <input type="text" name="q" value="{{ busqueda }}"
+           placeholder="🔍 Buscar por nombre o alumno..."
+           class="input-elegant flex-1">
+    <button type="submit" class="btn-primary">Buscar</button>
+    {% if busqueda %}
+    <a href="{% url 'apoderados:lista' %}"
+       style="background:rgba(100,116,139,0.15);border:1px solid rgba(100,116,139,0.3);color:#94a3b8;padding:0.6rem 1rem;border-radius:8px;font-size:0.85rem;font-weight:600;text-decoration:none;">
+        ✕ Limpiar
+    </a>
+    {% endif %}
+</form>
+
+{% if apoderados %}
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Apoderado</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">RUT</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Relación</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Alumno</th>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Contacto</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for ap in apoderados %}
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div class="flex items-center gap-3">
+                        <div style="width:36px;height:36px;background:linear-gradient(135deg,#1e3f7a,#0f2040);border:1px solid rgba(244,200,66,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+                            {{ ap.get_relacion_emoji }}
+                        </div>
+                        <div>
+                            <div style="color:#f1f5f9;font-weight:600;">{{ ap.nombre }}</div>
+                            <div style="color:#475569;font-size:0.75rem;">ID #{{ ap.pk }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding:1rem 1.25rem;color:#94a3b8;">{{ ap.rut }}</td>
+                <td style="padding:1rem 1.25rem;">
+                    <span class="badge-info">{{ ap.get_relacion_display }}</span>
+                </td>
+                <td style="padding:1rem 1.25rem;">
+                    <div style="color:#f1f5f9;font-weight:600;">{{ ap.alumno.nombre }} {{ ap.alumno.apellido }}</div>
+                    <div style="color:#475569;font-size:0.75rem;">{{ ap.alumno.curso }}</div>
+                </td>
+                <td style="padding:1rem 1.25rem;">
+                    <div style="color:#94a3b8;font-size:0.82rem;">📱 {{ ap.telefono }}</div>
+                    <div style="color:#94a3b8;font-size:0.82rem;">✉️ {{ ap.correo }}</div>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <div class="flex justify-center gap-2 flex-wrap">
+                        <a href="{% url 'apoderados:detalle' ap.pk %}" class="btn-indigo">👁️ Ver</a>
+                        <a href="{% url 'apoderados:editar' ap.pk %}" class="btn-warning">✏️</a>
+                        <a href="{% url 'apoderados:eliminar' ap.pk %}" class="btn-danger">🗑️</a>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">👨‍👩‍👧</div>
+    <p style="color:#475569;">No hay apoderados registrados.</p>
+    <a href="{% url 'apoderados:crear' %}" class="btn-primary" style="margin-top:1rem;display:inline-block;">
+        ➕ Registrar primer apoderado
+    </a>
+</div>
+{% endif %}
+{% endblock %}

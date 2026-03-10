@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block titulo %}Eliminar Alumno{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Gestión
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#ef4444;font-size:2rem;">
+        🗑️ Confirmar Eliminación
+    </h1>
+</div>
+
+<div class="glass-card rounded-2xl p-8 max-w-lg" style="border-left:3px solid #ef4444;">
+
+    <!-- Icono -->
+    <div style="width:56px;height:56px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1.5rem;">
+        ⚠️
+    </div>
+
+    <h2 style="color:#fca5a5;font-size:1.2rem;font-weight:700;margin-bottom:0.75rem;">
+        ¿Estás seguro de eliminar este alumno?
+    </h2>
+
+    <!-- Datos del alumno -->
+    <div style="background:rgba(239,68,68,0.05);border:1px solid rgba(239,68,68,0.15);border-radius:12px;padding:1rem;margin-bottom:1.25rem;">
+        <p style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">
+            Alumno a eliminar:
+        </p>
+        <p style="color:#f1f5f9;font-size:1.15rem;font-weight:700;">
+            {{ objeto }}
+        </p>
+    </div>
+
+    <p style="color:#ef4444;font-size:0.85rem;margin-bottom:2rem;">
+        ⚠️ Esta acción eliminará permanentemente al alumno y todos sus registros asociados. No se puede deshacer.
+    </p>
+
+    <form method="post" class="flex items-center gap-4">
+        {% csrf_token %}
+        <button type="submit"
+                style="background:linear-gradient(135deg,rgba(239,68,68,0.3),rgba(220,38,38,0.2));border:1px solid rgba(239,68,68,0.5);color:#fca5a5;padding:0.75rem 1.75rem;border-radius:10px;font-size:0.9rem;font-weight:700;cursor:pointer;transition:all 0.3s;font-family:'DM Sans',sans-serif;"
+                onmouseover="this.style.background='rgba(239,68,68,0.4)';this.style.color='#fff'"
+                onmouseout="this.style.background='linear-gradient(135deg,rgba(239,68,68,0.3),rgba(220,38,38,0.2))';this.style.color='#fca5a5'">
+            🗑️ Sí, eliminar alumno
+        </button>
+        <a href="javascript:history.back()"
+           style="color:#475569;font-size:0.85rem;text-decoration:none;transition:color 0.2s;"
+           onmouseover="this.style.color='#94a3b8'"
+           onmouseout="this.style.color='#475569'">
+            ← Cancelar
+        </a>
+    </form>
+</div>
+
+{% endblock %}

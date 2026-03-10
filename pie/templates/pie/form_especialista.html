@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ accion }} Especialista{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        PIE · {{ reg.alumno.nombre }} {{ reg.alumno.apellido }}
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        👤 {{ accion }} Especialista
+    </h1>
+    <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+        Curso: {{ reg.alumno.curso }} · {{ reg.get_necesidad_display }}
+    </p>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:750px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+
+            <!-- Especialidad -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Especialidad *
+                </label>
+                {{ form.especialidad }}
+            </div>
+
+            <!-- Nombre -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Nombre Completo *
+                </label>
+                {{ form.nombre }}
+            </div>
+
+            <!-- Correo -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Correo Electrónico
+                </label>
+                {{ form.correo }}
+            </div>
+
+            <!-- Teléfono -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Teléfono
+                </label>
+                {{ form.telefono }}
+            </div>
+
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(244,200,66,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            🗓️ Horario de Atención
+        </p>
+
+        <div style="display:grid;grid-template-columns:2fr 1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+
+            <!-- Días -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Días de Atención *
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        Separados por coma: lunes,miercoles,viernes
+                    </span>
+                </label>
+                {{ form.dias }}
+            </div>
+
+            <!-- Hora inicio -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Hora Inicio *
+                </label>
+                {{ form.hora_inicio }}
+            </div>
+
+            <!-- Hora fin -->
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Hora Fin *
+                </label>
+                {{ form.hora_fin }}
+            </div>
+
+        </div>
+
+        <!-- Observaciones -->
+        <div style="margin-bottom:2rem;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                          letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                Observaciones
+            </label>
+            {{ form.observaciones }}
+        </div>
+
+        <!-- Botones -->
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'pie:detalle' reg.pk %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;
+                      background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);
+                      color:#64748b;text-decoration:none;font-size:0.85rem;">
+                ← Cancelar
+            </a>
+            <button type="submit" class="btn-primary">
+                ✅ {{ accion }} Especialista
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,487 @@
+{% extends 'base.html' %}
+{% block titulo %}Dashboard{% endblock %}
+
+{% block contenido %}
+
+<!-- ══ HEADER ══ -->
+<div style="margin-bottom:2rem;">
+    <div style="display:flex;align-items:center;gap:0.75rem;margin-bottom:0.4rem;">
+        <div style="height:2px;width:32px;background:var(--gold-400, #f4c842);border-radius:2px;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;">
+            Bienvenido de vuelta
+        </p>
+    </div>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;font-weight:700;margin-bottom:0.3rem;">
+        Panel de Control
+    </h1>
+    <p style="color:#334155;font-size:0.82rem;">
+        <strong style="color:#475569;">{{ request.user.username }}</strong>
+        <span style="margin:0 0.5rem;color:#1e293b;">·</span>
+        <span id="fecha-hora" style="color:#334155;"></span>
+    </p>
+</div>
+
+<!-- ══ TARJETAS ESTADÍSTICAS ══ -->
+<div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;margin-bottom:2.5rem;">
+
+    {% for item in stats_cards %}
+    <div class="glass-card rounded-2xl p-5"
+         style="border-bottom:2px solid {{ item.color }};position:relative;overflow:hidden;">
+        <div style="position:absolute;top:-10px;right:-10px;font-size:3.5rem;opacity:0.04;">
+            {{ item.icon }}
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.75rem;">
+            <div style="width:38px;height:38px;border-radius:10px;
+                        background:{{ item.bg }};
+                        display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+                {{ item.icon }}
+            </div>
+            <span style="color:{{ item.label_color }};font-size:0.62rem;font-weight:700;
+                         text-transform:uppercase;letter-spacing:1px;">
+                {{ item.label }}
+            </span>
+        </div>
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;
+                    color:{{ item.value_color }};line-height:1;margin-bottom:0.25rem;">
+            {{ item.value }}
+        </div>
+        <div style="color:#334155;font-size:0.78rem;">{{ item.titulo }}</div>
+    </div>
+    {% empty %}
+    <!-- Fallback si no hay context processor -->
+    <div class="glass-card rounded-2xl p-5" style="border-bottom:2px solid #6366f1;">
+        <div style="font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:#a5b4fc;line-height:1;">
+            {{ total_alumnos|default:"—" }}
+        </div>
+        <div style="color:#334155;font-size:0.78rem;margin-top:0.25rem;">Alumnos</div>
+    </div>
+    {% endfor %}
+
+</div>
+
+<!-- ══ SEPARADOR ══ -->
+<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;">
+    <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(244,200,66,0.25),transparent);"></div>
+    <span style="color:#f4c842;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;white-space:nowrap;">
+        Accesos Rápidos
+    </span>
+    <div style="height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(244,200,66,0.25));"></div>
+</div>
+
+<!-- ══ TARJETAS DE ACCESO RÁPIDO ══ -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;margin-bottom:2.5rem;">
+
+    <!-- ALUMNOS -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #6366f1;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(99,102,241,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👩‍🎓</div>
+                <div>
+                    <div style="font-weight:700;color:#fdfdfd;font-size:0.9rem;">Alumnos</div>
+                    <div style="color:#334155;font-size:0.7rem;">Gestión de estudiantes</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'alumnos:lista' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(99,102,241,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📋</div>
+                <span style="font-size:0.8rem;">Ver lista</span>
+            </a>
+            <a href="{% url 'alumnos:crear' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(99,102,241,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">➕</div>
+                <span style="font-size:0.8rem;">Matricular</span>
+            </a>
+            <a href="{% url 'alumnos:por_curso' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(99,102,241,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📂</div>
+                <span style="font-size:0.8rem;">Por curso</span>
+            </a>
+            <a href="{% url 'alumnos:con_apoderados' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(99,102,241,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">👨‍👩‍👧</div>
+                <span style="font-size:0.8rem;">Con apoderados</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ACADÉMICO -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #818cf8;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(129,140,248,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📊</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">Académico</div>
+                    <div style="color:#334155;font-size:0.7rem;">Notas y asistencia</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'notas:resumen_cursos' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(129,140,248,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">🏆</div>
+                <span style="font-size:0.8rem;">Promedio por cursos</span>
+            </a>
+            <a href="{% url 'notas:libro_clases' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(129,140,248,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📖</div>
+                <span style="font-size:0.8rem;">Libro de clases</span>
+            </a>
+            <a href="{% url 'notas:resumen_asistencia_general' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(20,184,166,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📋</div>
+                <span style="font-size:0.8rem;">Asistencia general</span>
+            </a>
+            <a href="{% url 'predicciones:panel' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(232,121,249,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">🤖</div>
+                <span style="font-size:0.8rem;">Predicción ML</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- APODERADOS -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #f97316;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(249,115,22,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👨‍👩‍👧</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">Apoderados</div>
+                    <div style="color:#334155;font-size:0.7rem;">Familias y mensajes</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'apoderados:lista' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(249,115,22,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📋</div>
+                <span style="font-size:0.8rem;">Ver apoderados</span>
+            </a>
+            <a href="{% url 'apoderados:crear' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(249,115,22,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">➕</div>
+                <span style="font-size:0.8rem;">Registrar</span>
+            </a>
+            <a href="{% url 'apoderados:bandeja' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(249,115,22,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📬</div>
+                <span style="font-size:0.8rem;">Bandeja mensajes</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- PLANIFICACIONES -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #22c55e;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(34,197,94,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📘</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">Planificaciones</div>
+                    <div style="color:#334155;font-size:0.7rem;">Docentes y mensajes</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'planificaciones:lista' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(34,197,94,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📋</div>
+                <span style="font-size:0.8rem;">Ver planificaciones</span>
+            </a>
+            <a href="{% url 'planificaciones:crear' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(34,197,94,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">➕</div>
+                <span style="font-size:0.8rem;">Nueva planificación</span>
+            </a>
+            <a href="{% url 'planificaciones:enviar_mensaje' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(34,197,94,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📢</div>
+                <span style="font-size:0.8rem;">Enviar mensaje</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- PIE -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #e879f9;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(232,121,249,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🧩</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">PIE</div>
+                    <div style="color:#334155;font-size:0.7rem;">Integración Escolar</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'pie:lista' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(232,121,249,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📋</div>
+                <span style="font-size:0.8rem;">Ver alumnos PIE</span>
+            </a>
+            <a href="{% url 'pie:crear' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(232,121,249,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">➕</div>
+                <span style="font-size:0.8rem;">Ingresar al PIE</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- CERTIFICADOS -->
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #14b8a6;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(20,184,166,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">🎓</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">Certificados</div>
+                    <div style="color:#334155;font-size:0.7rem;">Informes y documentos</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="{% url 'alumnos:lista' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(20,184,166,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📄</div>
+                <span style="font-size:0.8rem;">Informe notas PDF</span>
+            </a>
+            <a href="{% url 'alumnos:por_curso' %}" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(20,184,166,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">📂</div>
+                <span style="font-size:0.8rem;">Lista por curso</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- ADMINISTRACIÓN -->
+    {% if user.is_superuser %}
+    <div class="glass-card rounded-2xl overflow-hidden" style="border-top:2px solid #f4c842;">
+        <div style="padding:1.1rem 1.25rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;align-items:center;gap:0.65rem;">
+                <div style="width:36px;height:36px;background:rgba(244,200,66,0.12);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">⚙️</div>
+                <div>
+                    <div style="font-weight:700;color:#f1f5f9;font-size:0.9rem;">Administración</div>
+                    <div style="color:#334155;font-size:0.7rem;">Panel Django</div>
+                </div>
+            </div>
+        </div>
+        <div style="padding:0.6rem 0.75rem;">
+            <a href="/admin/" class="nav-dropdown-item" style="border-radius:7px;">
+                <div style="width:24px;height:24px;background:rgba(244,200,66,0.1);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;">🛠️</div>
+                <span style="font-size:0.8rem;">Panel de administración</span>
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- ══ SEPARADOR ══ -->
+<div style="display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;">
+    <div style="height:1px;flex:1;background:linear-gradient(90deg,rgba(244,200,66,0.25),transparent);"></div>
+    <span style="color:#f4c842;font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:2px;white-space:nowrap;">
+        Estadísticas
+    </span>
+    <div style="height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(244,200,66,0.25));"></div>
+</div>
+
+<!-- ══ GRÁFICOS ══ -->
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1.25rem;">
+
+    <!-- Gráfico rendimiento -->
+    <div class="glass-card rounded-2xl p-6">
+        <p style="color:#f1f5f9;font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:600;margin-bottom:0.25rem;">
+            Rendimiento General
+        </p>
+        <p style="color:#334155;font-size:0.72rem;margin-bottom:1.25rem;">Alumnos en riesgo vs sin riesgo</p>
+        <div style="position:relative;height:180px;">
+            <canvas id="chartRendimiento"></canvas>
+        </div>
+    </div>
+
+    <!-- Gráfico asistencia -->
+    <div class="glass-card rounded-2xl p-6">
+        <p style="color:#f1f5f9;font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:600;margin-bottom:0.25rem;">
+            Distribución por Módulo
+        </p>
+        <p style="color:#334155;font-size:0.72rem;margin-bottom:1.25rem;">Registros en el sistema</p>
+        <div style="position:relative;height:180px;">
+            <canvas id="chartDistribucion"></canvas>
+        </div>
+    </div>
+
+    <!-- Resumen rápido -->
+    <div class="glass-card rounded-2xl p-6">
+        <p style="color:#f1f5f9;font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:600;margin-bottom:1.25rem;">
+            Estado del Sistema
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.65rem;">
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.6rem 0.85rem;
+                        background:rgba(99,102,241,0.06);
+                        border:1px solid rgba(99,102,241,0.12);
+                        border-radius:9px;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.85rem;">👩‍🎓</span>
+                    <span style="color:#94a3b8;font-size:0.8rem;">Total alumnos</span>
+                </div>
+                <span style="color:#a5b4fc;font-weight:700;font-family:'Playfair Display',serif;">
+                    {{ total_alumnos|default:"0" }}
+                </span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.6rem 0.85rem;
+                        background:rgba(34,197,94,0.06);
+                        border:1px solid rgba(34,197,94,0.12);
+                        border-radius:9px;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.85rem;">👨‍🏫</span>
+                    <span style="color:#94a3b8;font-size:0.8rem;">Profesores</span>
+                </div>
+                <span style="color:#86efac;font-weight:700;font-family:'Playfair Display',serif;">
+                    {{ total_profesores|default:"0" }}
+                </span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.6rem 0.85rem;
+                        background:rgba(244,200,66,0.06);
+                        border:1px solid rgba(244,200,66,0.12);
+                        border-radius:9px;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.85rem;">📚</span>
+                    <span style="color:#94a3b8;font-size:0.8rem;">Cursos activos</span>
+                </div>
+                <span style="color:#fde68a;font-weight:700;font-family:'Playfair Display',serif;">
+                    {{ total_cursos|default:"0" }}
+                </span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.6rem 0.85rem;
+                        background:rgba(239,68,68,0.06);
+                        border:1px solid rgba(239,68,68,0.12);
+                        border-radius:9px;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.85rem;">⚠️</span>
+                    <span style="color:#94a3b8;font-size:0.8rem;">En riesgo</span>
+                </div>
+                <span style="color:#fca5a5;font-weight:700;font-family:'Playfair Display',serif;">
+                    {{ alumnos_riesgo|default:"0" }}
+                </span>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;
+                        padding:0.6rem 0.85rem;
+                        background:rgba(232,121,249,0.06);
+                        border:1px solid rgba(232,121,249,0.12);
+                        border-radius:9px;">
+                <div style="display:flex;align-items:center;gap:0.5rem;">
+                    <span style="font-size:0.85rem;">🧩</span>
+                    <span style="color:#94a3b8;font-size:0.8rem;">Alumnos PIE</span>
+                </div>
+                <span style="color:#f0abfc;font-weight:700;font-family:'Playfair Display',serif;">
+                    {{ total_pie|default:"0" }}
+                </span>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<!-- ══ SCRIPTS ══ -->
+<script>
+    // Reloj
+    function updateClock() {
+        const el = document.getElementById('fecha-hora');
+        if (el) {
+            const now = new Date();
+            el.textContent = now.toLocaleDateString('es-CL', {
+                weekday:'long', year:'numeric',
+                month:'long', day:'numeric',
+                hour:'2-digit', minute:'2-digit'
+            });
+        }
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    // Gráfico rendimiento
+    new Chart(document.getElementById('chartRendimiento').getContext('2d'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Sin riesgo', 'En riesgo'],
+            datasets: [{
+                data: [
+                    Math.max(0, {{ total_alumnos|default:0 }} - {{ alumnos_riesgo|default:0 }}),
+                    {{ alumnos_riesgo|default:0 }}
+                ],
+                backgroundColor: ['rgba(34,197,94,0.7)', 'rgba(239,68,68,0.7)'],
+                borderColor:     ['rgba(34,197,94,1)',   'rgba(239,68,68,1)'],
+                borderWidth: 2,
+                hoverOffset: 8,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#475569',
+                        font: { size: 11, family: 'DM Sans' },
+                        padding: 16,
+                        boxWidth: 10,
+                    }
+                }
+            }
+        }
+    });
+
+    // Gráfico distribución
+    new Chart(document.getElementById('chartDistribucion').getContext('2d'), {
+        type: 'bar',
+        data: {
+            labels: ['Alumnos', 'Profesores', 'Cursos', 'Apoderados', 'PIE'],
+            datasets: [{
+                data: [
+                    {{ total_alumnos|default:0 }},
+                    {{ total_profesores|default:0 }},
+                    {{ total_cursos|default:0 }},
+                    {{ total_apoderados|default:0 }},
+                    {{ total_pie|default:0 }}
+                ],
+                backgroundColor: [
+                    'rgba(99,102,241,0.6)',
+                    'rgba(34,197,94,0.6)',
+                    'rgba(244,200,66,0.6)',
+                    'rgba(249,115,22,0.6)',
+                    'rgba(232,121,249,0.6)',
+                ],
+                borderColor: [
+                    'rgba(99,102,241,1)',
+                    'rgba(34,197,94,1)',
+                    'rgba(244,200,66,1)',
+                    'rgba(249,115,22,1)',
+                    'rgba(232,121,249,1)',
+                ],
+                borderWidth: 1,
+                borderRadius: 6,
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: {
+                    ticks: { color: '#475569', font: { size: 10 } },
+                    grid:  { color: 'rgba(255,255,255,0.03)' }
+                },
+                y: {
+                    ticks: { color: '#475569', font: { size: 10 } },
+                    grid:  { color: 'rgba(255,255,255,0.04)' },
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Animación de entrada
+    document.querySelectorAll('.glass-card').forEach((el, i) => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(16px)';
+        setTimeout(() => {
+            el.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
+            el.style.opacity    = '1';
+            el.style.transform  = 'translateY(0)';
+        }, i * 45);
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block titulo %}Mensajes Enviados a Alumnos{% endblock %}
+{% block contenido %}
+
+<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2rem;flex-wrap:wrap;gap:1rem;">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Comunicaciones</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">📬 Mensajes Enviados</h1>
+        <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">{{ total }} mensaje(s) en total</p>
+    </div>
+    <a href="{% url 'planificaciones:enviar_mensaje' %}" class="btn-primary">📢 Nuevo Mensaje</a>
+</div>
+
+<!-- Filtro por profesor -->
+<div class="glass-card rounded-2xl p-4 mb-6">
+    <form method="get" style="display:flex;gap:1rem;align-items:flex-end;">
+        <div style="flex:1;max-width:320px;">
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.4rem;">Filtrar por profesor</label>
+            <select name="profesor" class="input-elegant w-full" onchange="this.form.submit()">
+                <option value="">— Todos —</option>
+                {% for prof in profesores %}
+                <option value="{{ prof.pk }}" {% if prof.pk|stringformat:"s" == prof_id %}selected{% endif %}>{{ prof.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+</div>
+
+{% if mensajes %}
+<div style="display:flex;flex-direction:column;gap:1rem;">
+{% for msg in mensajes %}
+<div class="glass-card rounded-2xl p-5" style="border-left:3px solid rgba(99,102,241,0.4);">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.75rem;">
+        <div>
+            <div style="display:flex;gap:0.5rem;margin-bottom:0.4rem;flex-wrap:wrap;align-items:center;">
+                <span style="background:rgba(99,102,241,0.12);color:#c7d2fe;
+                             border:1px solid rgba(99,102,241,0.25);
+                             font-size:0.72rem;font-weight:700;padding:0.15rem 0.6rem;border-radius:20px;">
+                    {{ msg.get_tipo_display }}
+                </span>
+                <span style="background:rgba(244,200,66,0.08);color:#fde68a;
+                             border:1px solid rgba(244,200,66,0.2);
+                             font-size:0.72rem;font-weight:600;padding:0.15rem 0.6rem;border-radius:20px;">
+                    📚 {{ msg.curso }}
+                </span>
+                {% if msg.enviado_correo %}
+                <span class="badge-success" style="font-size:0.68rem;">✉️ Correo enviado</span>
+                {% endif %}
+                {% if msg.fecha_evento %}
+                <span style="color:#94a3b8;font-size:0.75rem;">📅 Evento: {{ msg.fecha_evento|date:"d/m/Y" }}</span>
+                {% endif %}
+            </div>
+            <h3 style="color:#f1f5f9;font-weight:700;font-size:0.95rem;">{{ msg.asunto }}</h3>
+            <p style="color:#475569;font-size:0.78rem;margin-top:0.2rem;">
+                👨‍🏫 {{ msg.profesor.nombre }} · 🕐 {{ msg.fecha_envio|date:"d/m/Y H:i" }} ·
+                👩‍🎓 {{ msg.destinatarios.count }} destinatario(s)
+            </p>
+        </div>
+    </div>
+    <p style="color:#64748b;font-size:0.85rem;line-height:1.5;">{{ msg.mensaje|truncatewords:25 }}</p>
+</div>
+{% endfor %}
+</div>
+
+{% else %}
+<div class="glass-card rounded-2xl p-16 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📭</div>
+    <p style="color:#475569;">No hay mensajes enviados aún.</p>
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% block titulo %}Libro de Clases{% endblock %}
+
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+            Listados
+        </p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            📖 Libro de Clases
+        </h1>
+        <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+            Selecciona un profesor y curso para ver las notas completas
+        </p>
+    </div>
+</div>
+
+<!-- Filtros -->
+<div class="glass-card rounded-2xl p-5 mb-6">
+    <form method="get" style="display:grid;grid-template-columns:1fr 1fr auto;gap:1rem;align-items:flex-end;">
+
+        <div>
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.4rem;">
+                Profesor
+            </label>
+            <select name="profesor" class="input-elegant w-full" onchange="this.form.submit()">
+                <option value="">— Seleccionar profesor —</option>
+                {% for prof in profesores %}
+                <option value="{{ prof.pk }}" {% if prof.pk|stringformat:"s" == prof_id %}selected{% endif %}>
+                    {{ prof.nombre }} — {{ prof.especialidad }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;display:block;margin-bottom:0.4rem;">
+                Curso
+            </label>
+            <select name="curso" class="input-elegant w-full" {% if not prof_id %}disabled{% endif %}>
+                <option value="">— Seleccionar curso —</option>
+                {% for c in cursos_profe %}
+                <option value="{{ c }}" {% if c == curso_sel %}selected{% endif %}>{{ c }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn-primary" {% if not prof_id %}disabled{% endif %}>
+            🔍 Ver
+        </button>
+
+    </form>
+</div>
+
+<!-- Tabla de notas -->
+{% if tabla %}
+<div class="glass-card rounded-2xl overflow-hidden">
+
+    <!-- Header con info del profesor y curso -->
+    <div style="padding:1rem 1.5rem;background:rgba(244,200,66,0.07);
+                border-bottom:1px solid rgba(244,200,66,0.15);
+                display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+            <div style="font-family:'Playfair Display',serif;color:#f4c842;font-size:1.05rem;font-weight:700;">
+                📖 {{ profesor_obj.nombre }} — Curso: {{ curso_sel }}
+            </div>
+            <div style="color:#475569;font-size:0.78rem;margin-top:0.2rem;">
+                {{ tabla|length }} alumnos · {{ asignaturas|length }} asignaturas
+            </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;">
+            <span class="badge-success">✅ Aprobados: {% for f in tabla %}{% if f.promedio_final and f.promedio_final >= 5.5 %}1{% endif %}{% endfor %}</span>
+        </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+        <table class="elegant-table w-full" style="min-width:1200px;">
+            <thead>
+                <tr>
+                    <th style="width:40px;">#</th>
+                    <th style="min-width:160px;">Alumno</th>
+                    {% for asig in asignaturas %}
+                    <th style="text-align:center;min-width:100px;font-size:0.72rem;">{{ asig }}</th>
+                    {% endfor %}
+                    <th style="text-align:center;min-width:90px;background:rgba(244,200,66,0.06);">
+                        Promedio Final
+                    </th>
+                    <th style="text-align:center;min-width:90px;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in tabla %}
+                <tr>
+                    <td style="color:#475569;font-size:0.8rem;">{{ forloop.counter }}</td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:0.6rem;">
+                            <div style="width:30px;height:30px;border-radius:50%;
+                                        background:rgba(99,102,241,0.15);
+                                        display:flex;align-items:center;justify-content:center;
+                                        color:#a5b4fc;font-weight:700;font-size:0.75rem;flex-shrink:0;">
+                                {{ fila.alumno.nombre|slice:":1" }}{{ fila.alumno.apellido|slice:":1" }}
+                            </div>
+                            <div>
+                                <div style="color:#f1f5f9;font-weight:600;font-size:0.82rem;">
+                                    {{ fila.alumno.apellido }}, {{ fila.alumno.nombre }}
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    {% for asig_data in fila.asignaturas %}
+                    <td style="text-align:center;padding:0.5rem;">
+                        {% if asig_data.promedio %}
+                        <div style="font-weight:700;font-size:0.88rem;
+                            color:{% if asig_data.promedio >= 5.5 %}#86efac{% elif asig_data.promedio >= 4.5 %}#fde68a{% else %}#fca5a5{% endif %};">
+                            {{ asig_data.promedio }}
+                        </div>
+                        <div style="color:#334155;font-size:0.65rem;margin-top:0.1rem;">
+                            {% if asig_data.nota_1 %}{{ asig_data.nota_1 }}{% else %}—{% endif %} ·
+                            {% if asig_data.nota_2 %}{{ asig_data.nota_2 }}{% else %}—{% endif %} ·
+                            {% if asig_data.nota_3 %}{{ asig_data.nota_3 }}{% else %}—{% endif %} ·
+                            {% if asig_data.nota_4 %}{{ asig_data.nota_4 }}{% else %}—{% endif %}
+                        </div>
+                        {% else %}
+                        <span style="color:#334155;font-size:0.8rem;">—</span>
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+
+                    <!-- Promedio final -->
+                    <td style="text-align:center;background:rgba(244,200,66,0.04);">
+                        {% if fila.promedio_final %}
+                        <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+                            color:{% if fila.promedio_final >= 5.5 %}#86efac{% elif fila.promedio_final >= 4.5 %}#fde68a{% else %}#fca5a5{% endif %};">
+                            {{ fila.promedio_final }}
+                        </span>
+                        {% else %}
+                        <span style="color:#334155;">—</span>
+                        {% endif %}
+                    </td>
+
+                    <!-- Estado -->
+                    <td style="text-align:center;">
+                        {% if fila.promedio_final %}
+                            {% if fila.promedio_final >= 5.5 %}
+                            <span class="badge-success">✅</span>
+                            {% elif fila.promedio_final >= 4.5 %}
+                            <span class="badge-warning">⚠️</span>
+                            {% else %}
+                            <span class="badge-danger">❌</span>
+                            {% endif %}
+                        {% else %}
+                        <span style="color:#334155;font-size:0.75rem;">Sin datos</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% elif prof_id and curso_sel %}
+<div class="glass-card rounded-2xl p-12 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📭</div>
+    <p style="color:#475569;">No hay alumnos registrados en el curso <strong style="color:#f4c842;">{{ curso_sel }}</strong>.</p>
+</div>
+
+{% elif prof_id %}
+<div class="glass-card rounded-2xl p-12 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📚</div>
+    <p style="color:#475569;">Selecciona un <strong style="color:#f4c842;">curso</strong> para ver el libro de clases.</p>
+</div>
+
+{% else %}
+<div class="glass-card rounded-2xl p-12 text-center">
+    <div style="font-size:3rem;margin-bottom:1rem;">📖</div>
+    <p style="color:#475569;">Selecciona un <strong style="color:#f4c842;">profesor</strong> para comenzar.</p>
+</div>
+{% endif %}
+
+{% endblock %}

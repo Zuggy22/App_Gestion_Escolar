@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% block titulo %}Matricular Alumno{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Gestión
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Matricular Alumno
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">
+        Completa los datos del nuevo estudiante
+    </p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:start;">
+
+    <!-- Formulario -->
+    <div class="glass-card rounded-2xl p-8">
+        <form method="post" style="display:flex;flex-direction:column;gap:1.3rem;">
+            {% csrf_token %}
+            {% for campo in formulario %}
+            <div>
+                <label style="display:block;color:#94a3b8;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.5rem;">
+                    {{ campo.label }}
+                    {% if campo.field.required %}
+                    <span style="color:#ef4444;margin-left:2px;">*</span>
+                    {% endif %}
+                </label>
+                {{ campo }}
+                {% if campo.errors %}
+                {% for error in campo.errors %}
+                <p style="color:#f87171;font-size:0.78rem;margin-top:0.3rem;display:flex;align-items:center;gap:0.3rem;">
+                    ⚠️ {{ error }}
+                </p>
+                {% endfor %}
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- Separador -->
+            <div style="height:1px;background:linear-gradient(90deg,transparent,rgba(244,200,66,0.15),transparent);margin:0.5rem 0;"></div>
+
+            <div class="flex items-center gap-4">
+                <button type="submit" class="btn-primary" style="padding:0.75rem 2rem;font-size:0.9rem;">
+                    ✅ Matricular Alumno
+                </button>
+                <a href="{% url 'alumnos:lista' %}"
+                   style="color:#475569;font-size:0.85rem;text-decoration:none;transition:color 0.2s;"
+                   onmouseover="this.style.color='#94a3b8'"
+                   onmouseout="this.style.color='#475569'">
+                    ← Volver a la lista
+                </a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Panel informativo -->
+    <div style="display:flex;flex-direction:column;gap:1rem;min-width:220px;">
+
+        <div class="glass-card rounded-2xl p-5" style="border-top:2px solid #6366f1;">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem;">📋</div>
+            <div style="color:#a5b4fc;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">
+                Campos requeridos
+            </div>
+            <p style="color:#475569;font-size:0.8rem;line-height:1.5;">
+                Los campos marcados con <span style="color:#ef4444;">*</span> son obligatorios para completar la matrícula.
+            </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5" style="border-top:2px solid #f4c842;">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem;">💡</div>
+            <div style="color:#fde68a;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">
+                Promedio inicial
+            </div>
+            <p style="color:#475569;font-size:0.8rem;line-height:1.5;">
+                El promedio se actualizará automáticamente al ingresar las notas del alumno.
+            </p>
+        </div>
+
+        <div class="glass-card rounded-2xl p-5" style="border-top:2px solid #22c55e;">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem;">🔒</div>
+            <div style="color:#86efac;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">
+                Correo único
+            </div>
+            <p style="color:#475569;font-size:0.8rem;line-height:1.5;">
+                El correo electrónico debe ser único por alumno en el sistema.
+            </p>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

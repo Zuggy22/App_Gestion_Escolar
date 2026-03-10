@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+{% block titulo %}{{ accion }} Evaluación PIE{% endblock %}
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        PIE · {{ reg.alumno.nombre }} {{ reg.alumno.apellido }}
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        📝 {{ accion }} Evaluación Diferenciada
+    </h1>
+    <p style="color:#475569;font-size:0.82rem;margin-top:0.3rem;">
+        Curso: {{ reg.alumno.curso }} · {{ reg.get_necesidad_display }}
+    </p>
+</div>
+
+<!-- Aviso complementario -->
+<div style="background:rgba(99,102,241,0.06);border:1px solid rgba(99,102,241,0.2);
+            border-radius:12px;padding:0.85rem 1.1rem;margin-bottom:1.5rem;
+            display:flex;gap:0.75rem;align-items:flex-start;max-width:750px;">
+    <span style="font-size:1rem;flex-shrink:0;">💡</span>
+    <p style="color:#94a3b8;font-size:0.8rem;line-height:1.5;">
+        Esta evaluación es <strong style="color:#c7d2fe;">complementaria</strong> a las notas del sistema regular.
+        Registra las adecuaciones aplicadas y la nota obtenida en esta instancia diferenciada.
+    </p>
+</div>
+
+<div class="glass-card rounded-2xl p-8" style="max-width:750px;">
+    <form method="post">
+        {% csrf_token %}
+
+        <!-- Tipo, asignatura, especialista, fecha -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Tipo de Evaluación *
+                </label>
+                {{ form.tipo }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Asignatura *
+                </label>
+                {{ form.asignatura }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Especialista a cargo
+                </label>
+                {{ form.especialista }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Fecha *
+                </label>
+                {{ form.fecha }}
+            </div>
+        </div>
+
+        <!-- Separador -->
+        <div style="height:1px;background:linear-gradient(90deg,rgba(244,200,66,0.3),transparent);margin-bottom:1.25rem;"></div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;
+                  letter-spacing:1.5px;margin-bottom:1.25rem;">
+            📋 Detalle de la Evaluación
+        </p>
+
+        <!-- Descripción y adecuaciones -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:1.25rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Descripción *
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        ¿Qué se evaluó?
+                    </span>
+                </label>
+                {{ form.descripcion }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Adecuaciones Aplicadas *
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        Ej: tiempo extendido, lectura guiada...
+                    </span>
+                </label>
+                {{ form.adecuaciones }}
+            </div>
+        </div>
+
+        <!-- Nota y observaciones -->
+        <div style="display:grid;grid-template-columns:1fr 2fr;gap:1.25rem;margin-bottom:2rem;">
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Nota Obtenida
+                    <span style="color:#475569;font-size:0.68rem;text-transform:none;display:block;margin-top:0.2rem;">
+                        Escala 1.0 – 7.0 (opcional)
+                    </span>
+                </label>
+                {{ form.nota_obtenida }}
+            </div>
+            <div>
+                <label style="color:#94a3b8;font-size:0.75rem;text-transform:uppercase;
+                              letter-spacing:1px;display:block;margin-bottom:0.5rem;">
+                    Observaciones
+                </label>
+                {{ form.observaciones }}
+            </div>
+        </div>
+
+        <!-- Botones -->
+        <div style="display:flex;gap:0.75rem;justify-content:flex-end;">
+            <a href="{% url 'pie:detalle' reg.pk %}"
+               style="padding:0.65rem 1.5rem;border-radius:8px;
+                      background:rgba(255,255,255,0.04);
+                      border:1px solid rgba(255,255,255,0.08);
+                      color:#64748b;text-decoration:none;font-size:0.85rem;">
+                ← Cancelar
+            </a>
+            <button type="submit" class="btn-primary">
+                ✅ {{ accion }} Evaluación
+            </button>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

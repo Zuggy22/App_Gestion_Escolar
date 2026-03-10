@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block titulo %}Apoderado — {{ apoderado.nombre }}{% endblock %}
+{% block contenido %}
+
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">Ficha</p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            {{ apoderado.get_relacion_emoji }} {{ apoderado.nombre }}
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">
+            {{ apoderado.get_relacion_display }} de
+            <strong style="color:#94a3b8;">{{ apoderado.alumno.nombre }} {{ apoderado.alumno.apellido }}</strong>
+        </p>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+        <a href="{% url 'apoderados:enviar_mensaje' apoderado.pk %}" class="btn-teal">✉️ Enviar Mensaje</a>
+        <a href="{% url 'apoderados:editar' apoderado.pk %}" class="btn-warning">✏️ Editar</a>
+        <a href="{% url 'apoderados:lista' %}" class="btn-primary">← Volver</a>
+    </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 2fr;gap:1.5rem;margin-bottom:1.5rem;">
+
+    <!-- Datos apoderado -->
+    <div class="glass-card rounded-2xl p-6" style="border-top:2px solid rgba(244,200,66,0.3);">
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+            👤 Datos del Apoderado
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.85rem;">
+            {% for label, valor in forloop.counter|zipwith:'' %}{% endfor %}
+            <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:0.6rem;">
+                <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">RUT</div>
+                <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ apoderado.rut }}</div>
+            </div>
+            <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:0.6rem;">
+                <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Teléfono</div>
+                <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ apoderado.telefono }}</div>
+            </div>
+            <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:0.6rem;">
+                <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Correo</div>
+                <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ apoderado.correo }}</div>
+            </div>
+            <div style="border-bottom:1px solid rgba(255,255,255,0.04);padding-bottom:0.6rem;">
+                <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Dirección</div>
+                <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ apoderado.direccion }}</div>
+            </div>
+            {% if apoderado.datos_adicionales %}
+            <div>
+                <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Datos adicionales</div>
+                <div style="color:#94a3b8;font-size:0.85rem;margin-top:0.2rem;line-height:1.5;">
+                    {{ apoderado.datos_adicionales }}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Resumen académico -->
+    <div class="glass-card rounded-2xl p-6" style="border-top:2px solid rgba(99,102,241,0.3);">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <p style="color:#a5b4fc;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                📊 Resumen Académico — {{ apoderado.alumno.nombre }}
+            </p>
+            {% if promedio_final %}
+            <span style="font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;
+                         color:{% if promedio_final >= 5.5 %}#86efac{% else %}#fca5a5{% endif %};">
+                {{ promedio_final }}
+            </span>
+            {% endif %}
+        </div>
+        <table class="w-full text-sm">
+            <thead>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.05);">
+                    <th style="padding:0.5rem 0.75rem;text-align:left;color:#475569;font-size:0.72rem;text-transform:uppercase;">Asignatura</th>
+                    <th style="padding:0.5rem 0.75rem;text-align:center;color:#475569;font-size:0.72rem;text-transform:uppercase;">Promedio</th>
+                    <th style="padding:0.5rem 0.75rem;text-align:center;color:#475569;font-size:0.72rem;text-transform:uppercase;">Asistencia</th>
+                    <th style="padding:0.5rem 0.75rem;text-align:center;color:#475569;font-size:0.72rem;text-transform:uppercase;">Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in resumen %}
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.03);">
+                    <td style="padding:0.5rem 0.75rem;color:#f1f5f9;font-weight:600;font-size:0.85rem;">{{ r.asignatura }}</td>
+                    <td style="padding:0.5rem 0.75rem;text-align:center;color:{% if r.promedio and r.promedio >= 5.5 %}#86efac{% elif r.promedio %}#fca5a5{% else %}#475569{% endif %};font-weight:700;">
+                        {{ r.promedio|default:"—" }}
+                    </td>
+                    <td style="padding:0.5rem 0.75rem;text-align:center;color:{% if r.porcentaje and r.porcentaje >= 80 %}#86efac{% elif r.porcentaje and r.porcentaje >= 70 %}#fde68a{% elif r.porcentaje %}#fca5a5{% else %}#475569{% endif %};font-weight:600;font-size:0.82rem;">
+                        {% if r.porcentaje %}{{ r.porcentaje }}%{% else %}—{% endif %}
+                    </td>
+                    <td style="padding:0.5rem 0.75rem;text-align:center;">
+                        {% if r.aprobacion.estado == 'Aprobado' %}<span class="badge-success" style="font-size:0.68rem;">✅</span>
+                        {% elif r.aprobacion.estado == 'Reprobado' %}<span class="badge-danger" style="font-size:0.68rem;">❌</span>
+                        {% else %}<span class="badge-warning" style="font-size:0.68rem;">—</span>{% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div style="margin-top:1rem;text-align:right;">
+            <a href="{% url 'notas:informe_alumno' apoderado.alumno.pk %}"
+               style="color:#f4c842;font-size:0.8rem;font-weight:600;text-decoration:none;">
+                📄 Ver informe completo →
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Mensajes -->
+<div class="glass-card rounded-2xl overflow-hidden">
+    <div style="padding:1rem 1.5rem;background:linear-gradient(135deg,#0f2040,#162d57);border-bottom:1px solid rgba(244,200,66,0.1);display:flex;justify-content:space-between;align-items:center;">
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+            📬 Historial de Mensajes
+        </p>
+        <div style="display:flex;gap:0.75rem;align-items:center;">
+            {% if pendientes > 0 %}
+            <span class="badge-warning">{{ pendientes }} pendiente(s)</span>
+            {% endif %}
+            <a href="{% url 'apoderados:enviar_mensaje' apoderado.pk %}" class="btn-teal" style="font-size:0.78rem;">
+                ✉️ Nuevo mensaje
+            </a>
+        </div>
+    </div>
+
+    {% if mensajes %}
+    <div style="display:flex;flex-direction:column;gap:0;">
+        {% for msg in mensajes %}
+        <div style="padding:1rem 1.5rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                <div style="display:flex;gap:0.75rem;align-items:center;">
+                    <span style="color:{{ msg.color_categoria.text }};font-size:0.75rem;font-weight:700;border:1px solid {{ msg.color_categoria.border }};padding:0.15rem 0.6rem;border-radius:20px;">
+                        {{ msg.get_categoria_display }}
+                    </span>
+                    <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ msg.asunto }}</span>
+                </div>
+                <div style="display:flex;gap:0.5rem;align-items:center;">
+                    <span style="background:{{ msg.color_estado.bg }};color:{{ msg.color_estado.text }};border:1px solid {{ msg.color_estado.border }};font-size:0.72rem;font-weight:700;padding:0.15rem 0.6rem;border-radius:20px;">
+                        {{ msg.get_estado_display }}
+                    </span>
+                    {% if msg.estado == 'pendiente' %}
+                    <a href="{% url 'apoderados:responder_mensaje' msg.pk %}" class="btn-primary" style="font-size:0.72rem;padding:0.3rem 0.75rem;">
+                        Responder
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;">{{ msg.mensaje }}</p>
+            {% if msg.respuesta %}
+            <div style="background:rgba(34,197,94,0.05);border-left:3px solid rgba(34,197,94,0.3);padding:0.75rem;border-radius:0 8px 8px 0;margin-top:0.5rem;">
+                <p style="color:#94a3b8;font-size:0.72rem;text-transform:uppercase;margin-bottom:0.3rem;">Respuesta:</p>
+                <p style="color:#86efac;font-size:0.82rem;line-height:1.5;">{{ msg.respuesta }}</p>
+            </div>
+            {% endif %}
+            <p style="color:#374151;font-size:0.72rem;margin-top:0.5rem;">
+                📅 {{ msg.fecha_envio|date:"d/m/Y H:i" }}
+            </p>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div style="padding:3rem;text-align:center;color:#374151;">
+        📬 No hay mensajes registrados aún.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

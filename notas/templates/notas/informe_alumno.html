@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% block titulo %}Informe — {{ alumno.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<!-- Header -->
+<div class="flex items-start justify-between mb-8">
+    <div>
+        <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+            Informe Académico
+        </p>
+        <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+            {{ alumno.nombre }} {{ alumno.apellido }}
+        </h1>
+        <p class="text-slate-500 text-sm mt-1">
+            Curso: <strong style="color:#94a3b8;">{{ alumno.curso }}</strong>
+            · Generado: <strong style="color:#94a3b8;">{{ fecha_hoy|date:"d/m/Y" }}</strong>
+        </p>
+    </div>
+    <div style="display:flex;gap:0.75rem;">
+        <a href="{% url 'notas:informe_pdf' alumno.pk %}"
+           style="background:linear-gradient(135deg,#dc2626,#b91c1c);border:1px solid rgba(239,68,68,0.4);color:#fff;padding:0.65rem 1.4rem;border-radius:8px;font-weight:600;font-size:0.85rem;text-decoration:none;display:flex;align-items:center;gap:0.5rem;transition:all 0.3s;"
+           onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 4px 20px rgba(239,68,68,0.3)'"
+           onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='none'">
+            📄 Descargar PDF
+        </a>
+        <a href="{% url 'notas:notas_alumno' alumno.pk %}" class="btn-primary">
+            ← Volver a notas
+        </a>
+    </div>
+</div>
+
+<!-- Tarjetas resumen -->
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-bottom:2rem;">
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #f4c842;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;line-height:1;
+                    color:{% if promedio_final and promedio_final >= 5.5 %}#86efac{% elif promedio_final %}#fca5a5{% else %}#475569{% endif %};">
+            {% if promedio_final %}{{ promedio_final }}{% else %}—{% endif %}
+        </div>
+        <div style="color:#64748b;font-size:0.8rem;margin-top:0.3rem;">Promedio Final</div>
+    </div>
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #22c55e;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#86efac;line-height:1;">
+            {{ aprobadas }}
+        </div>
+        <div style="color:#64748b;font-size:0.8rem;margin-top:0.3rem;">Asignaturas Aprobadas</div>
+    </div>
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #ef4444;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#fca5a5;line-height:1;">
+            {{ reprobadas }}
+        </div>
+        <div style="color:#64748b;font-size:0.8rem;margin-top:0.3rem;">Asignaturas Reprobadas</div>
+    </div>
+    <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #6366f1;">
+        <div style="font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;color:#a5b4fc;line-height:1;">
+            {{ observaciones.count }}
+        </div>
+        <div style="color:#64748b;font-size:0.8rem;margin-top:0.3rem;">Observaciones</div>
+    </div>
+</div>
+
+<!-- Datos personales -->
+<div class="glass-card rounded-2xl p-6 mb-6" style="border-top:2px solid rgba(244,200,66,0.3);">
+    <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+        👤 Datos Personales
+    </p>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1rem;">
+    <div>
+        <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Nombre</div>
+        <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ alumno.nombre }} {{ alumno.apellido }}</div>
+    </div>
+    <div>
+        <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">RUT</div>
+        <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ alumno.rut|default:"Sin RUT" }}</div>
+    </div>
+    <div>
+        <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Curso</div>
+        <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ alumno.curso|default:"—" }}</div>
+    </div>
+    <div>
+        <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Correo</div>
+        <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ alumno.correo|default:"—" }}</div>
+    </div>
+    <div>
+        <div style="color:#475569;font-size:0.72rem;text-transform:uppercase;letter-spacing:0.5px;">Edad</div>
+        <div style="color:#f1f5f9;font-weight:600;margin-top:0.2rem;">{{ alumno.edad|default:"—" }} años</div>
+    </div>
+</div>
+
+<!-- Tabla de notas y asistencia -->
+<div class="glass-card rounded-2xl overflow-hidden mb-6">
+    <div style="padding:1rem 1.5rem;border-bottom:1px solid rgba(244,200,66,0.1);">
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+            📊 Rendimiento por Asignatura
+        </p>
+    </div>
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:0.85rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Asignatura</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">N1</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">N2</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">N3</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">N4</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Promedio</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Asistencia</th>
+                <th style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Estado</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in resumen %}
+            <tr>
+                <td style="padding:0.85rem 1.25rem;color:#f1f5f9;font-weight:600;">{{ r.asignatura }}</td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;">{{ r.nota_1|default:"—" }}</td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;">{{ r.nota_2|default:"—" }}</td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;">{{ r.nota_3|default:"—" }}</td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;color:#94a3b8;">{{ r.nota_4|default:"—" }}</td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;">
+                    <span style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;
+                                 color:{% if r.promedio and r.promedio >= 5.5 %}#86efac{% elif r.promedio %}#fca5a5{% else %}#475569{% endif %};">
+                        {% if r.promedio %}{{ r.promedio }}{% else %}—{% endif %}
+                    </span>
+                </td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;">
+                    {% if r.porcentaje %}
+                    <div style="display:flex;flex-direction:column;align-items:center;gap:0.2rem;">
+                        <div style="background:rgba(255,255,255,0.05);border-radius:99px;height:5px;width:70px;overflow:hidden;">
+                            <div style="height:100%;border-radius:99px;width:{{ r.porcentaje }}%;
+                                        background:{% if r.porcentaje >= 80 %}#22c55e{% elif r.porcentaje >= 70 %}#eab308{% else %}#ef4444{% endif %};">
+                            </div>
+                        </div>
+                        <span style="font-size:0.75rem;font-weight:700;
+                                     color:{% if r.porcentaje >= 80 %}#86efac{% elif r.porcentaje >= 70 %}#fde68a{% else %}#fca5a5{% endif %};">
+                            {{ r.porcentaje }}%
+                        </span>
+                    </div>
+                    {% else %}
+                    <span style="color:#374151;">—</span>
+                    {% endif %}
+                </td>
+                <td style="padding:0.85rem 1.25rem;text-align:center;">
+                    {% if r.aprobacion.estado == 'Aprobado' %}<span class="badge-success">✅ Aprobado</span>
+                    {% elif r.aprobacion.estado == 'Reprobado' %}<span class="badge-danger">❌ Reprobado</span>
+                    {% else %}<span class="badge-warning">⏳ Sin datos</span>{% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Observaciones -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
+
+    <!-- Lista de observaciones -->
+    <div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
+            <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;">
+                📝 Observaciones Registradas
+            </p>
+            <span style="color:#475569;font-size:0.78rem;">{{ observaciones.count }} total</span>
+        </div>
+
+        {% if observaciones %}
+        <div style="display:flex;flex-direction:column;gap:0.75rem;max-height:500px;overflow-y:auto;">
+            {% for obs in observaciones %}
+            <div class="glass-card rounded-xl p-4"
+                 style="border-left:3px solid {{ obs.color.border }};background:{{ obs.color.bg }};">
+                <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem;">
+                    <span style="color:{{ obs.color.text }};font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">
+                        {{ obs.get_categoria_display }}
+                    </span>
+                    <form method="post" action="{% url 'notas:eliminar_observacion' obs.pk %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit"
+                                style="background:none;border:none;color:#374151;cursor:pointer;font-size:0.75rem;padding:0;transition:color 0.2s;"
+                                onmouseover="this.style.color='#fca5a5'"
+                                onmouseout="this.style.color='#374151'"
+                                onclick="return confirm('¿Eliminar esta observación?')">
+                            🗑️
+                        </button>
+                    </form>
+                </div>
+                <p style="color:#e2e8f0;font-size:0.85rem;line-height:1.5;margin-bottom:0.5rem;">
+                    {{ obs.texto }}
+                </p>
+                <div style="display:flex;justify-content:space-between;align-items:center;">
+                    <span style="color:#374151;font-size:0.72rem;">
+                        📅 {{ obs.fecha|date:"d/m/Y H:i" }}
+                    </span>
+                    <span style="color:#374151;font-size:0.72rem;">
+                        👤 {{ obs.usuario.username|default:"—" }}
+                    </span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="glass-card rounded-xl p-8 text-center">
+            <div style="font-size:2rem;margin-bottom:0.5rem;">📝</div>
+            <p style="color:#374151;font-size:0.85rem;">Sin observaciones registradas.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Formulario nueva observación -->
+    <div>
+        <p style="color:#f4c842;font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">
+            ➕ Nueva Observación
+        </p>
+        <div class="glass-card rounded-2xl p-6" style="border-top:2px solid rgba(99,102,241,0.3);">
+            <form method="post" style="display:flex;flex-direction:column;gap:1rem;">
+                {% csrf_token %}
+                {% for campo in form %}
+                <div>
+                    <label style="display:block;color:#94a3b8;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">
+                        {{ campo.label }}
+                    </label>
+                    {{ campo }}
+                    {% if campo.errors %}
+                    {% for error in campo.errors %}
+                    <p style="color:#f87171;font-size:0.75rem;margin-top:0.2rem;">⚠️ {{ error }}</p>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+                {% endfor %}
+
+                <!-- Info usuario -->
+                <div style="background:rgba(99,102,241,0.08);border:1px solid rgba(99,102,241,0.2);border-radius:8px;padding:0.75rem;font-size:0.78rem;color:#a5b4fc;">
+                    👤 Se registrará a nombre de: <strong>{{ request.user.username }}</strong><br>
+                    📅 Fecha: <strong>{{ fecha_hoy|date:"d/m/Y" }}</strong>
+                </div>
+
+                <button type="submit" class="btn-primary" style="text-align:center;padding:0.75rem;">
+                    ✅ Guardar Observación
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+<!-- Botón PDF fijo abajo -->
+<div style="margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.05);display:flex;justify-content:space-between;align-items:center;">
+    <a href="{% url 'alumnos:lista' %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">
+        ← Volver a la lista
+    </a>
+    <a href="{% url 'notas:informe_pdf' alumno.pk %}"
+       style="background:linear-gradient(135deg,#dc2626,#b91c1c);border:1px solid rgba(239,68,68,0.4);color:#fff;padding:0.75rem 2rem;border-radius:10px;font-weight:700;font-size:0.9rem;text-decoration:none;display:flex;align-items:center;gap:0.5rem;">
+        📄 Descargar Informe PDF
+    </a>
+</div>
+
+{% endblock %}

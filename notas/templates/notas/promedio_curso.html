@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block titulo %}Promedio Curso {{ curso }}{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#f4c842;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        Rendimiento
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Curso {{ curso }}
+    </h1>
+    <p class="text-slate-500 text-sm mt-1">{{ total_alumnos }} alumno(s) en este curso</p>
+</div>
+
+{% if promedio_general %}
+<div class="glass-card rounded-2xl p-6 mb-6 flex items-center gap-6"
+     style="border-left:3px solid {% if promedio_general >= 5.5 %}#22c55e{% else %}#ef4444{% endif %};">
+    <div style="font-family:'Playfair Display',serif;font-size:5rem;font-weight:700;line-height:1;
+                color:{% if promedio_general >= 5.5 %}#86efac{% else %}#fca5a5{% endif %};">
+        {{ promedio_general }}
+    </div>
+    <div>
+        <div style="color:#f1f5f9;font-size:1.2rem;font-weight:700;">Promedio General del Curso</div>
+        <div style="margin-top:0.5rem;">
+            {% if promedio_general >= 5.5 %}
+            <span class="badge-success">✅ Rendimiento satisfactorio</span>
+            {% else %}
+            <span class="badge-danger">⚠️ Requiere atención</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="glass-card rounded-2xl overflow-hidden">
+    <table class="w-full text-sm elegant-table">
+        <thead>
+            <tr>
+                <th style="padding:1rem 1.25rem;text-align:left;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Alumno</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Promedio Final</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Estado</th>
+                <th style="padding:1rem 1.25rem;text-align:center;color:#94a3b8;font-size:0.75rem;text-transform:uppercase;letter-spacing:1px;font-weight:600;">Ver Notas</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dato in datos_alumnos %}
+            <tr>
+                <td style="padding:1rem 1.25rem;">
+                    <div class="flex items-center gap-3">
+                        <div style="width:34px;height:34px;background:linear-gradient(135deg,#1e3f7a,#0f2040);border:1px solid rgba(244,200,66,0.2);border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:700;color:#f4c842;font-size:0.78rem;flex-shrink:0;">
+                            {{ dato.alumno.nombre|first|upper }}{{ dato.alumno.apellido|first|upper }}
+                        </div>
+                        <span style="color:#f1f5f9;font-weight:600;">
+                            {{ dato.alumno.nombre }} {{ dato.alumno.apellido }}
+                        </span>
+                    </div>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <span style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;
+                                 color:{% if dato.promedio and dato.promedio >= 5.5 %}#86efac{% elif dato.promedio %}#fca5a5{% else %}#475569{% endif %};">
+                        {% if dato.promedio %}{{ dato.promedio }}{% else %}—{% endif %}
+                    </span>
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    {% if dato.promedio %}
+                        {% if dato.promedio >= 5.5 %}<span class="badge-success">✅ Aprobado</span>
+                        {% else %}<span class="badge-danger">⚠️ Reprobado</span>{% endif %}
+                    {% else %}
+                    <span class="badge-warning">Sin notas</span>
+                    {% endif %}
+                </td>
+                <td style="padding:1rem 1.25rem;text-align:center;">
+                    <a href="{% url 'notas:notas_alumno' dato.alumno.pk %}" class="btn-indigo">
+                        📊 Ver notas
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div style="margin-top:1.5rem;">
+    <a href="{% url 'notas:resumen_cursos' %}" style="color:#475569;font-size:0.85rem;text-decoration:none;">
+        ← Volver al resumen
+    </a>
+</div>
+
+{% endblock %}

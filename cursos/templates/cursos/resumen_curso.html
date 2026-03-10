@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% block titulo %}Curso Creado{% endblock %}
+
+{% block contenido %}
+
+<div class="mb-8">
+    <p style="color:#22c55e;font-size:0.75rem;font-weight:600;text-transform:uppercase;letter-spacing:2px;" class="mb-1">
+        ✅ Registro Exitoso
+    </p>
+    <h1 style="font-family:'Playfair Display',serif;color:#f1f5f9;font-size:2rem;">
+        Curso Creado
+    </h1>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:800px;">
+
+    <div class="glass-card rounded-2xl p-8" style="border-top:3px solid #22c55e;">
+        <div style="width:56px;height:56px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:1.5rem;">
+            📚
+        </div>
+        <h2 style="font-family:'Playfair Display',serif;color:#86efac;font-size:1.3rem;margin-bottom:1.5rem;">
+            🎉 ¡Curso registrado!
+        </h2>
+        <div style="display:flex;flex-direction:column;gap:0.75rem;margin-bottom:2rem;">
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Ramo</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ nombre_ramo }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Nivel</span>
+                <span style="color:#f1f5f9;font-weight:600;font-size:0.9rem;">{{ nivel }}</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;padding-bottom:0.6rem;border-bottom:1px solid rgba(255,255,255,0.04);">
+                <span style="color:#475569;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px;">Jornada</span>
+                <span class="badge-info">{{ jornada }}</span>
+            </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:0.6rem;">
+            <a href="{% url 'cursos:crear' %}" class="btn-primary" style="text-align:center;">
+                ➕ Crear otro curso
+            </a>
+            <a href="{% url 'cursos:lista' %}"
+               style="text-align:center;color:#475569;font-size:0.85rem;text-decoration:none;padding:0.5rem;">
+                ← Ver lista de cursos
+            </a>
+        </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:1rem;">
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #6366f1;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">👨‍🏫</div>
+            <div style="color:#a5b4fc;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">Siguiente paso</div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Asigna un profesor jefe editando el curso.
+            </p>
+            <a href="{% url 'cursos:lista' %}" class="btn-indigo" style="font-size:0.78rem;">
+                Ver cursos →
+            </a>
+        </div>
+        <div class="glass-card rounded-2xl p-5" style="border-left:3px solid #f4c842;">
+            <div style="font-size:1.4rem;margin-bottom:0.5rem;">👩‍🎓</div>
+            <div style="color:#fde68a;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.4rem;">Matricular alumnos</div>
+            <p style="color:#64748b;font-size:0.82rem;line-height:1.5;margin-bottom:0.75rem;">
+                Asigna alumnos a este curso desde la sección de alumnos.
+            </p>
+            <a href="{% url 'alumnos:crear' %}" class="btn-warning" style="font-size:0.78rem;">
+                Matricular alumno →
+            </a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
