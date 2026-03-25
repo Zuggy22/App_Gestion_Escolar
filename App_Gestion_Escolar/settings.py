@@ -1,21 +1,14 @@
-"""
-Django settings para App_Gestion_Escolar.
-
-Este archivo es el "reglamento escolar" de nuestro proyecto.
-Aquí Django aprende todo: qué apps existen, dónde están los templates,
-dónde están los archivos estáticos (CSS), etc.
-"""
-
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# ── Seguridad ──
 SECRET_KEY = 'django-insecure-clave-solo-para-desarrollo-cambiala-en-produccion'
+DEBUG = False
+ALLOWED_HOSTS = ['zuggeits.alwaysdata.net', 'localhost', '127.0.0.1']
 
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+# ── Aplicaciones ──
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -33,6 +26,7 @@ INSTALLED_APPS = [
     'pie',
 ]
 
+# ── Middleware ──
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -45,6 +39,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'App_Gestion_Escolar.urls'
 
+# ── Templates ──
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -63,6 +58,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'App_Gestion_Escolar.wsgi.application'
 
+# ── Base de datos ──
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -70,23 +66,19 @@ DATABASES = {
     }
 }
 
-STATIC_URL = '/static/'
+# ── Archivos estáticos ──
+STATIC_URL  = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATICFILES_DIRS = [
-    BASE_DIR / 'static',
-]
-
+# ── Configuración general ──
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
 LANGUAGE_CODE = 'es-cl'
-TIME_ZONE = 'America/Santiago'
+TIME_ZONE     = 'America/Santiago'
 USE_I18N = True
-USE_TZ = True
+USE_TZ   = True
 
-# ---------------------------------------------------------------------------
-# Seguridad — Variables de Autenticación (UNA SOLA VEZ)
-# ---------------------------------------------------------------------------
-LOGIN_REDIRECT_URL  = '/'   # ← Al loguearse va al panel de inicio
+# ── Autenticación ──
+LOGIN_REDIRECT_URL  = '/'
 LOGOUT_REDIRECT_URL = '/login/'
 LOGIN_URL           = 'login'
 
@@ -95,6 +87,6 @@ EMAIL_BACKEND       = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST          = 'smtp.gmail.com'
 EMAIL_PORT          = 587
 EMAIL_USE_TLS       = True
-EMAIL_HOST_USER     = 'tu_correo@gmail.com'      # ← cambia esto
-EMAIL_HOST_PASSWORD = 'tu_contraseña_de_app'     # ← cambia esto (contraseña de aplicación Gmail)
+EMAIL_HOST_USER     = 'tu_correo@gmail.com'
+EMAIL_HOST_PASSWORD = 'tu_contraseña_de_app'
 DEFAULT_FROM_EMAIL  = 'Liceo Municipal <tu_correo@gmail.com>'
